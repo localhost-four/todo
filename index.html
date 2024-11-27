@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="app-header">
+                <a href="#top" onclick="copy()">TODO</a>
+                <div class="tabs-container">
+                    <button class="tab" onclick="openNewBoardTab()">DESK</button>
+                    <button class="tab" onclick="openAddTaskModal()">TASK</button>
+                </div>
+            </div>
+        </header>
+        <div class="tabs-container">
+            <div id="tabs"></div>
+        </div>
+
+        <!-- Доски -->
+        <div class="task-container" id="task-container">
+            <!-- Доски будут добавляться сюда -->
+        </div>
+        
+        <!-- Modal for Adding Tasks -->
+        <div class="modal" id="addTaskModal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Add Task</h2>
+                <input type="text" id="taskTitle" placeholder="Task Title">
+                <input type="date" id="taskDeadline">
+                <textarea id="taskDescription" placeholder="Task Description"></textarea>
+                <input type="file" id="taskFile" onchange="previewFile()">
+                <input type="url" id="taskLink" placeholder="Resource Link">
+                <select id="taskPriority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <button onclick="addTask()">Add Task</button>
+                <div id="filePreview" class="file-preview"></div>
+            </div>
+        </div>
+
+        <!-- Modal for Board Settings -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <span class="close" onclick="closeSettings()">&times;</span>
+                <h2>Board Settings</h2>
+                <label>Emoji:</label>
+                <input type="text" id="emojiInput">
+                <label>Background Color:</label>
+                <input type="color" id="backgroundColorInput">
+                <label>Text Color:</label>
+                <input type="color" id="textColorInput">
+                <label>Style:</label>
+                <select id="styleInput">
+                    <option value="block">Block</option>
+                    <option value="grid">Grid</option>
+                    <option value="flex">Flex</option>
+                </select>
+                <button onclick="applyBoardSettings()">Apply</button>
+            </div>
+        </div>
+
+        <!-- Modal for adding comment -->
+        <div id="commentModal" class="modal">
+            <div class="modal-content">
+                <h2>Add Comment</h2>
+                <textarea id="commentText" placeholder="Enter your comment..."></textarea>
+                
+                <div>
+                    <label for="fileInput">Upload Image:</label>
+                    <input type="file" id="fileInput" accept="image/*">
+                </div>
+                
+                <div>
+                    <label for="urlInput">Image URL:</label>
+                    <input type="url" id="urlInput" placeholder="Enter image URL">
+                </div>
+                
+                <button id="saveCommentBtn">Save Comment</button>
+                <button onclick="closeCommentModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
