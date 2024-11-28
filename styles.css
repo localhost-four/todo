@@ -23,16 +23,18 @@ img {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    padding: 10px; /* Добавлено для мобильной адаптации */
 }
 
 .app-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 20px;
+    padding: 15px 10px; /* Подстройка отступов */
     background-color: #3498db;
     color: white;
     font-size: 1.5em;
+    border-radius: 10px; /* Радиус углов для более приятного внешнего вида */
 }
  
 .app-header a { 
@@ -41,12 +43,10 @@ img {
     color: #ddd;
     margin-top: 1%;
     font-size: 2em;
-    padding: 10px 20px;
-
+    padding: 8px 15px; /* Оптимизация отступов для мобильных */
     background-color: skyblue;
     color: white;
-
-    border-radius: 38px;
+    border-radius: 30px; /* Увеличен радиус для более круглых кнопок */
 }
 
 .app-header a:hover {
@@ -92,7 +92,7 @@ button:hover {
 
 /* Доски */
 .task-container {
-    width: 80%;
+    width: 100%;
     padding: 20px;
     display: flex;
     flex-wrap: wrap;
@@ -118,7 +118,8 @@ button:hover {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 200px;
+    width: 100%; /* Сделано шире для мобильных устройств */
+    max-width: 200px; /* Ограничение максимальной ширины */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
 }
@@ -177,4 +178,75 @@ input, textarea, select {
 
 .file-preview a:hover {
     text-decoration: underline;
+}
+
+/* Медиазапросы для адаптивного дизайна */
+@media (max-width: 768px) {
+    .app-header {
+        font-size: 1.2em;
+        padding: 15px 5px; /* Подстройка отступов для мобильных */
+    }
+
+    .app-header a {
+        font-size: 1.5em;
+        padding: 8px 12px;
+    }
+
+    .task-container {
+        padding: 10px;
+    }
+
+    .task-card {
+        width: 100%;
+        max-width: 90%; /* Уменьшение ширины карточек на мобильных */
+    }
+
+    .modal-content {
+        width: 80%; /* Уменьшение размера модального окна для мобильных */
+    }
+
+    button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .tab {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-header {
+        font-size: 1.1em;
+        padding: 10px 5px; /* Еще меньше отступы */
+    }
+
+    .task-card {
+        width: 100%;
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .task-container {
+        padding: 5px;
+    }
+
+    .modal-content {
+        width: 95%; /* Почти на всю ширину экрана */
+    }
+
+    button {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+
+    .tab {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+
+    img {
+        max-width: 60px; /* Уменьшение размера изображений на маленьких экранах */
+    }
 }
