@@ -92,7 +92,7 @@ function addTask() {
     const title = document.getElementById('taskTitle').value;
     const deadline = document.getElementById('taskDeadline').value;
     const description = document.getElementById('taskDescription').value;
-    const file = document.getElementById('taskFile').files[0];
+    const imageUrl = document.getElementById('taskImageUrl').value;
     const link = document.getElementById('taskLink').value;
     const priority = document.getElementById('taskPriority').value;
 
@@ -102,12 +102,20 @@ function addTask() {
         return;
     }
 
+    // Проверяем, что введенная строка является валидным URL изображения
+    const isValidImageUrl = imageUrl && (imageUrl.match(/\.(jpeg|jpg|gif|png)$/) !== null);
+
+    if (imageUrl && !isValidImageUrl) {
+        alert('Please provide a valid image URL!');
+        return;
+    }
+
     const task = {
         id: `task${Date.now()}`,
         title,
         deadline,
         description,
-        file,
+        imageUrl, // Сохраняем только URL изображения
         link,
         priority,
         comments: []
@@ -122,10 +130,10 @@ function addTask() {
     board.tasks.push(task);
     renderBoards();
     closeModal();
-    saveStateToURL();
+    saveStateToURL(); // Сохраняем состояние в URL
 }
 
-// Функция для рендеринга задач
+
 function renderTasks(board) {
     const taskBoard = document.getElementById(board.id);
     taskBoard.innerHTML = '';
@@ -150,23 +158,21 @@ function renderTasks(board) {
             <div class="comments">
                 ${task.comments.map(comment => {
                     let commentHtml = `<p>${comment.text || ''}</p>`;
-                    if (comment.file) {
-                        // Если есть изображение, загруженное через файл
-                        commentHtml += `<img src="${URL.createObjectURL(comment.file)}" alt="Image Preview" class="file-preview" />`;
-                    }
                     if (comment.imageUrl) {
                         // Если есть картинка по URL
-                        commentHtml += `<img src="${comment.imageUrl}" alt="Image URL" class="file-preview" />`;
+                        commentHtml += `<img src="${comment.imageUrl}" alt="Image" class="file-preview" />`;
                     }
                     return commentHtml;
                 }).join('')}
             </div>
-            ${task.file ? renderFilePreview(task.file) : ''}
+            ${task.imageUrl ? `<img src="${task.imageUrl}" alt="Image" class="file-preview" />` : ''}
             ${task.link ? `<a href="${task.link}" target="_blank">Open Link</a>` : ''}
         `;
         taskBoard.appendChild(taskCard);
     });
 }
+
+
 
 // Функция для предпросмотра файла
 function renderFilePreview(file) {
@@ -189,6 +195,7 @@ function saveStateToURL() {
     const encodedState = encodeURIComponent(JSON.stringify(state));
     window.history.replaceState(null, '', `?state=${encodedState}`);
 }
+
 
 // Функция для загрузки состояния из URL
 function loadStateFromURL() {
@@ -245,41 +252,42 @@ function applyBoardSettings() {
     closeSettings();
 }
 
-// Функция для открытия модального окна комментариев
 function openCommentModal(boardId, taskId) {
     const modal = document.getElementById('commentModal');
     const task = boards.find(board => board.id === boardId).tasks.find(task => task.id === taskId);
 
     if (task) {
-        // Открываем модальное окно
         modal.style.display = 'block';
-        
-        // Обработчик события для кнопки сохранения комментария
+
         const saveCommentBtn = document.getElementById('saveCommentBtn');
         saveCommentBtn.onclick = function() {
             const comment = document.getElementById('commentText').value;
-            const fileInput = document.getElementById('fileInput').files[0];
-            const urlInput = document.getElementById('urlInput').value;
+            const imageUrl = document.getElementById('urlInput').value;
 
-            // Проверка наличия комментария
-            if (comment || fileInput || urlInput) {
-                if (fileInput) {
-                    // Добавляем файл (картинку)
-                    task.comments.push({ text: comment, file: fileInput });
-                } else if (urlInput) {
-                    // Добавляем картинку по URL
-                    task.comments.push({ text: comment, imageUrl: urlInput });
+            // Проверяем, что URL является изображением
+            const isValidImageUrl = imageUrl && (imageUrl.match(/\.(jpeg|jpg|gif|png)$/) !== null);
+            if (imageUrl && !isValidImageUrl) {
+                alert('Please provide a valid image URL!');
+                return;
+            }
+
+            if (comment || imageUrl) {
+                // Добавляем комментарий с изображением
+                if (imageUrl) {
+                    task.comments.push({ text: comment, imageUrl });
                 } else {
-                    // Добавляем только текст комментария
                     task.comments.push({ text: comment });
                 }
 
-                renderTasks(boards.find(board => board.id === boardId)); // Перерисовываем задачи
-                closeCommentModal(); // Закрываем модальное окно
+                renderTasks(boards.find(board => board.id === boardId));  // Перерисовываем задачи
+                saveStateToURL();  // Сохраняем состояние в URL
+                closeCommentModal(); // Закрываем окно
             }
         };
     }
 }
+
+
 
 // Функция для закрытия модального окна комментариев
 function closeCommentModal() {

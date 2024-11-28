@@ -68,9 +68,12 @@
                 <h2>Add Task</h2>
                 <input type="text" id="taskTitle" placeholder="Task Title">
                 <input type="date" id="taskDeadline">
+                <script>
+                    document.getElementById('taskDeadline').value = new Date().toISOString().split('T')[0];
+                </script>
                 <textarea id="taskDescription" placeholder="Task Description"></textarea>
-                <input type="file" id="taskFile" onchange="previewFile()">
-                <input type="url" id="taskLink" placeholder="Resource Link">
+                <input type="url" id="taskImageUrl" placeholder="Image URL (Only for Image)">
+                <input type="url" id="taskLink" placeholder="Resource Link (url)">
                 <select id="taskPriority">
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -80,6 +83,7 @@
                 <div id="filePreview" class="file-preview"></div>
             </div>
         </div>
+
 
         <!-- Modal for Board Settings -->
         <div class="modal" id="settingsModal">
