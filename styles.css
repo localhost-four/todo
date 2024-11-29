@@ -250,3 +250,81 @@ input, textarea, select {
         max-width: 60px; /* Уменьшение размера изображений на маленьких экранах */
     }
 }
+
+
+/* Общие стили для кнопки TODO */
+.app-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 10px;
+    background-color: #3498db;
+    color: white;
+    font-size: 1.5em;
+    border-radius: 10px;
+}
+
+/* Стилизация списка недавно появившихся ссылок */
+.active-links {
+    width: 70%; /* Установим ширину блока для ссылок */
+    display: flex;
+    justify-content: space-between; /* Элементы будут располагаться в строку */
+    align-items: center;
+}
+
+#data-list {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Расстояние между элементами */
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+#data-list li {
+    flex: 1; /* Каждый элемент будет занимать равную долю ширины */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.8em; /* Размер шрифта для ссылок */
+}
+
+#data-list li a {
+    display: block;
+    width: 100%; /* Кнопка должна занимать всю ширину ячейки */
+    background-color: #2980b9;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: background-color 0.3s;
+}
+
+#data-list li a:hover {
+    background-color: #1c658c;
+}
+
+/* Стили для заголовка */
+.active-links h3 {
+    font-size: 0.7em;
+    margin-bottom: 10px;
+}
+
+/* Убедимся, что элементы на мобильных устройствах тоже правильно выглядят */
+@media (max-width: 768px) {
+    .active-links {
+        flex-direction: column; /* Переводим элементы в столбец на маленьких экранах */
+        align-items: flex-start;
+    }
+
+    #data-list {
+        flex-direction: column; /* Переводим список в столбец */
+        gap: 5px;
+    }
+
+    #data-list li {
+        width: 100%; /* Убираем деление на части на маленьких экранах */
+    }
+}

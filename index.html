@@ -37,23 +37,116 @@
     <!-- Заголовок страницы -->
     <title>TODO List — Task Management App</title>
 
+    <!-- Firebase SDK -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://127.0.0.1:3000;"> -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://127.0.0.1:3000; 'nonce-xyz123';"> -->
+    <!-- Подключаем Firebase SDK для модулей -->
+    <script type="module">
+        // Подключение Firebase с использованием ES Modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
+
+        // Настройки Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMek24rrioHn3kPaOGDCNIgq1CU7ROVsE",
+            authDomain: "todo-4e809.firebaseapp.com",
+            projectId: "todo-4e809",
+            storageBucket: "todo-4e809.firebasestorage.app",
+            messagingSenderId: "166519588590",
+            appId: "1:166519588590:web:cb3f6b4e6cba1749a515ff",
+            measurementId: "G-45P7VYXPCZ"
+        };
+
+        // Инициализация Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Получение текущей ссылки страницы
+        const currentUrl = window.location.href;
+
+        // Функция для отправки текущей ссылки в Firestore
+        async function sendUrlToFirestore() {
+            try {
+                await addDoc(collection(db, "urls"), {
+                    url: currentUrl,
+                    timestamp: new Date().toISOString()
+                });
+            } catch (error) {
+                console.error("Err url:", error);
+            }
+        }
+
+        // Функция для получения и отображения последних 5 URL из базы данных
+        async function displayDataFromFirestore() {
+            try {
+                const q = query(collection(db, "urls"), orderBy("timestamp", "desc"), limit(3));
+                const querySnapshot = await getDocs(q);
+                
+                // Очистим список перед добавлением новых данных
+                const dataList = document.getElementById("data-list");
+                if (dataList) {
+                    dataList.innerHTML = "";
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const url = doc.data().url;
+                    const timestamp = doc.data().timestamp; // Получаем временную метку записи
+
+                    // Преобразуем временную метку в объект Date
+                    const date = new Date(timestamp);
+
+                    // Форматируем дату в строку (например, "YYYY-MM-DD HH:mm")
+                    const formattedDate = date.toLocaleString(); // Вы можете настроить формат по своему усмотрению
+
+                    // Создаем ссылку с датой записи
+                    const li = document.createElement("li");
+                    const link = document.createElement("a");
+                    link.href = url; // Устанавливаем href для кликабельности
+                    link.textContent = `Date: ${formattedDate}`; // Отображаем дату записи вместо 8 символов
+
+                    // Добавляем ссылку в список
+                    li.appendChild(link);
+                    dataList.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Err:", error);
+            }
+        }
+
+
+        // Отправляем текущую ссылку в базу данных
+        sendUrlToFirestore();
+
+        // Отображаем первые 5 записей из базы данных
+        displayDataFromFirestore();
+    </script>
+
 
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <script src="script.js" defer nonce="xyz123"></script>
+
 </head>
 <body>
     <div class="app-container">
         <header>
             <div class="app-header">
-                <a href="#top" onclick="copy()">TODO</a>
+                <a href="#top" onclick="copy()" nonce="xyz123">TODO</a>
+                <div class="active-links">
+                    <h3>Sample:</h3>
+                    <ul id="data-list"></ul>
+                </div>
                 <div class="tabs-container">
-                    <button class="tab" onclick="openNewBoardTab()">DESK</button>
-                    <button class="tab" onclick="openAddTaskModal()">TASK</button>
+                    <button class="tab" nonce="xyz123" onclick="openNewBoardTab()">DESK</button>
+                    <button class="tab" nonce="xyz123" onclick="openAddTaskModal()">TASK</button>
                 </div>
             </div>
         </header>
         <div class="tabs-container">
             <div id="tabs"></div>
+        </div>
+
+        <div class="task-container" id="task-container">
+            <!-- Доски будут добавляться сюда -->
         </div>
 
         <!-- Доски -->
@@ -64,11 +157,11 @@
         <!-- Modal for Adding Tasks -->
         <div class="modal" id="addTaskModal">
             <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
+                <span class="close" onclick="closeModal()" nonce="xyz123">&times;</span>
                 <h2>Add Task</h2>
                 <input type="text" id="taskTitle" placeholder="Task Title">
                 <input type="date" id="taskDeadline">
-                <script>
+                <script nonce="xyz123">
                     document.getElementById('taskDeadline').value = new Date().toISOString().split('T')[0];
                 </script>
                 <textarea id="taskDescription" placeholder="Task Description"></textarea>
@@ -79,7 +172,7 @@
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
                 </select>
-                <button onclick="addTask()">Add Task</button>
+                <button onclick="addTask()" nonce="xyz123">Add Task</button>
                 <div id="filePreview" class="file-preview"></div>
             </div>
         </div>
@@ -88,7 +181,7 @@
         <!-- Modal for Board Settings -->
         <div class="modal" id="settingsModal">
             <div class="modal-content">
-                <span class="close" onclick="closeSettings()">&times;</span>
+                <span class="close" onclick="closeSettings()" nonce="xyz123">&times;</span>
                 <h2>Board Settings</h2>
                 <label>Emoji:</label>
                 <input type="text" id="emojiInput">
@@ -102,7 +195,7 @@
                     <option value="grid">Grid</option>
                     <option value="flex">Flex</option>
                 </select>
-                <button onclick="applyBoardSettings()">Apply</button>
+                <button onclick="applyBoardSettings()" nonce="xyz123">Apply</button>
             </div>
         </div>
 
@@ -113,19 +206,15 @@
                 <textarea id="commentText" placeholder="Enter your comment..."></textarea>
                 
                 <div>
-                    <label for="fileInput">Upload Image:</label>
-                    <input type="file" id="fileInput" accept="image/*">
-                </div>
-                
-                <div>
                     <label for="urlInput">Image URL:</label>
                     <input type="url" id="urlInput" placeholder="Enter image URL">
                 </div>
                 
                 <button id="saveCommentBtn">Save Comment</button>
-                <button onclick="closeCommentModal()">Cancel</button>
+                <button onclick="closeCommentModal()" nonce="xyz123">Cancel</button>
             </div>
         </div>
     </div>
+
 </body>
 </html>

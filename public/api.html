@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Ссылка на Firebase</title>
+    <!-- Подключаем Firebase SDK для модулей -->
+    <script type="module">
+        // Подключение Firebase с использованием ES Modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
+
+        // Настройки Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMek24rrioHn3kPaOGDCNIgq1CU7ROVsE",
+            authDomain: "todo-4e809.firebaseapp.com",
+            projectId: "todo-4e809",
+            storageBucket: "todo-4e809.firebasestorage.app",
+            messagingSenderId: "166519588590",
+            appId: "1:166519588590:web:cb3f6b4e6cba1749a515ff",
+            measurementId: "G-45P7VYXPCZ"
+        };
+
+        // Инициализация Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Получение текущей ссылки страницы
+        const currentUrl = window.location.href;
+        document.getElementById("current-url").textContent = currentUrl;
+
+        // Функция для отправки текущей ссылки в Firestore
+        async function sendUrlToFirestore() {
+            try {
+                await addDoc(collection(db, "urls"), {
+                    url: currentUrl,
+                    timestamp: new Date().toISOString()
+                });
+                console.log("URL отправлен в базу данных.");
+            } catch (error) {
+                console.error("Ошибка при отправке URL в базу данных:", error);
+            }
+        }
+
+        // Функция для получения и отображения первых 5 URL из базы данных
+        async function displayDataFromFirestore() {
+            try {
+                const q = query(collection(db, "urls"), orderBy("timestamp", "desc"), limit(5));
+                const querySnapshot = await getDocs(q);
+                
+                // Очистим список перед добавлением новых данных
+                const dataList = document.getElementById("data-list");
+                dataList.innerHTML = "";
+
+                querySnapshot.forEach((doc) => {
+                    const li = document.createElement("li");
+                    li.textContent = doc.data().url;
+                    dataList.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Ошибка при получении данных из базы:", error);
+            }
+        }
+
+        // Отправляем текущую ссылку в базу данных
+        sendUrlToFirestore();
+
+        // Отображаем первые 5 записей из базы данных
+        displayDataFromFirestore();
+    </script>
+</head>
+<body>
+    <h1>TODO will be shared</h1>
+    <div>
+        <p>Current address:<span id="current-url"></span></p>
+    </div>
+    
+    <div>
+        <h2>Recently appeared:</h2>
+        <ul id="data-list"></ul>
+    </div>
+</body>
+</html>

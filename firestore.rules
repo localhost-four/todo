@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Разрешаем чтение и запись для всех пользователей (опасно для продакшн!)
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /urls/{urlId} {
+      // Разрешаем доступ только для аутентифицированных пользователей
+      allow read, write: if request.auth != null;
+    }
+  }
+}

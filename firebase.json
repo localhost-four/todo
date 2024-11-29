@@ -1,0 +1,28 @@
+{
+    "hosting": {
+      "public": "public",  // Папка, которая будет развернута на GitHub Pages
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/:shortUrl",
+          "function": "redirectUrl"  // перенаправление на функцию (если нужно)
+        }
+      ]
+    },
+    "functions": {
+      "predeploy": ["npm run lint"],
+      "source": "functions"
+    },
+    "firestore": {
+      "rules": "firestore.rules",
+      "indexes": "firestore.indexes.json"
+    },
+    "database": {
+      "rules": "database.rules.json"
+    }
+  }
+  

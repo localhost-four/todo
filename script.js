@@ -118,7 +118,7 @@ function addTask() {
         imageUrl, // Сохраняем только URL изображения
         link,
         priority,
-        comments: []
+        comments: [], 
     };
 
     const board = boards.find(b => b.id === activeBoardId);
@@ -131,6 +131,7 @@ function addTask() {
     renderBoards();
     closeModal();
     saveStateToURL(); // Сохраняем состояние в URL
+
 }
 
 
@@ -185,6 +186,40 @@ function renderFilePreview(file) {
     return `<p>File: ${file.name}</p>`;
 }
 
+
+
+// Функция для сохранения состояния в LocalStorage
+function saveStateToLocalStorage() {
+    const state = {
+        boards,
+        activeBoardId,
+        theme: document.body.classList.contains('dark-theme') ? 'dark' : 'light'
+    };
+    localStorage.setItem('todoAppState', JSON.stringify(state));
+}
+
+// Функция для загрузки состояния из LocalStorage
+function loadStateFromLocalStorage() {
+    const state = localStorage.getItem('todoAppState');
+    if (state) {
+        try {
+            const parsedState = JSON.parse(state);
+            boards = parsedState.boards || [];
+            activeBoardId = parsedState.activeBoardId || null;
+            if (parsedState.theme) {
+                document.body.classList.add(parsedState.theme === 'dark' ? 'dark-theme' : 'light-theme');
+            }
+            renderBoards();
+        } catch (error) {
+            console.error('Error loading state from LocalStorage:', error);
+        }
+    }
+}
+
+
+
+
+
 // Функция для сохранения состояния в URL
 function saveStateToURL() {
     const state = {
@@ -194,6 +229,7 @@ function saveStateToURL() {
     };
     const encodedState = encodeURIComponent(JSON.stringify(state));
     window.history.replaceState(null, '', `?state=${encodedState}`);
+    saveStateToLocalStorage();
 }
 
 

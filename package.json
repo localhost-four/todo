@@ -1,0 +1,26 @@
+{
+    "name": "firebase-url-storage",
+    "version": "1.0.0",
+    "description": "Save URL Firebase Firestore",
+    "main": "index.js",
+    "scripts": {
+      "start": "live-server", 
+      "deploy": "firebase deploy"
+    },
+    "keywords": [
+      "firebase",
+      "firestore",
+      "urls",
+      "javascript"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "firebase": "^9.21.0",
+      "live-server": "^1.2.1"
+    },
+    "devDependencies": {
+      "firebase-tools": "^11.0.0"
+    }
+  }
+  
