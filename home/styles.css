@@ -13,8 +13,7 @@ body {
     justify-content: flex-start;
     align-items: center;
     background-color: #f0f0f0;
-    overflow: hidden;
-    transition: all 0.3s ease;
+    overflow-x: hidden;
 }
 
 .container {
@@ -23,32 +22,36 @@ body {
     align-items: center;
     width: 100%;
     max-width: 600px;
+    padding-top: 90px; /* Добавляем отступ для корректного отображения */
 }
 
 .search-wrapper {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    text-align: center;
     width: 100%;
     max-width: 500px;
-    transition: top 0.5s ease, transform 0.5s ease;
+    display: flex;
+    justify-content: center;
+    transition: top 0.3s ease, transform 0.3s ease;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
 }
 
 .search-container {
     display: flex;
     align-items: center;
-    justify-content: center;
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 50px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
+    border-radius: 50px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .search-container input {
-    width: 80%;
+    width: 100%;
     border: none;
     padding: 10px;
     font-size: 16px;
@@ -67,29 +70,29 @@ body {
 }
 
 .stats {
-    margin-top: 2px;
     font-size: 14px;
     color: #777;
     padding: 1px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
+    margin-top: 2px;
 }
 
 .data-list {
     list-style: none;
     padding: 0;
-    margin-top: 50px;
+    margin-top: 20px;
     width: 100%;
-    max-width: 500px;
+    min-width: 500px;
     transition: opacity 0.3s ease;
+    overflow-y: auto; /* Прокрутка списка */
+    min-height: 500px; /* Ограничиваем высоту списка */
 }
-
 
 #data-list li.show {
     display: block;
     opacity: 1;
-}  
+}
 
 li {
     background-color: #fff;
@@ -97,6 +100,7 @@ li {
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
 li a {
@@ -108,14 +112,6 @@ li a {
     white-space: nowrap;
     text-overflow: ellipsis; /* Truncate long links */
     max-width: 100%;
-}
-
-
-.search-wrapper input {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
 }
 
 li .date {
@@ -134,8 +130,10 @@ li .date {
 @media screen and (max-width: 600px) {
     .search-wrapper {
         top: 10%;
+        padding: 5px 10px;
     }
-    .search-container {
-        width: 80%;
+
+    .search-container input {
+        font-size: 14px;
     }
 }

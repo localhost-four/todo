@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, where, Timestamp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
+import { getFirestore, collection, getDocs, query, orderBy, where, Timestamp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
 
 // Firebase setup
 const firebaseConfig = {
@@ -33,9 +33,9 @@ function truncateLink(link) {
 // Загрузка всех данных из Firestore
 async function loadAllDataFromFirestore() {
   try {
-    const q = query(collection(db, 'urls'), orderBy('timestamp', 'desc'), limit(8)); // Ограничиваем загрузку до 30 записей
+    const q = query(collection(db, 'urls'), orderBy('timestamp', 'desc'));
     const querySnapshot = await getDocs(q);
-
+    
     allLinks = []; // Очистить массив перед загрузкой новых данных
 
     querySnapshot.forEach((doc) => {
@@ -62,11 +62,11 @@ async function loadAllDataFromFirestore() {
 
       li.appendChild(link);
       li.appendChild(dateSpan);
-      li.classList.add('hidden');  // Скрыть ссылки по умолчанию
+      li.classList.add('hidden');
       dataList.appendChild(li);
     });
 
-    // Обновить статистику
+    // Обновление статистики
     updateStats(querySnapshot.size);
     dataList.classList.remove('hidden');  // Показать список после загрузки
 
@@ -99,11 +99,21 @@ searchInput.addEventListener('input', (e) => {
 
   // Строка поиска поднимается к шапке при активации
   if (searchQuery !== '') {
-    document.querySelector('.search-wrapper').style.top = '40%'; // Поднятие строки поиска
+    document.querySelector('.search-wrapper').style.top = '5%'; // Поднятие строки поиска
     statsContainer.classList.add('hidden');  // Скрываем статистику
   } else {
-    document.querySelector('.search-wrapper').style.top = '50%'; // Возврат строки поиска
+    document.querySelector('.search-wrapper').style.top = '90%'; // Возврат строки поиска
     statsContainer.classList.remove('hidden');  // Показываем статистику
+  }
+});
+
+// Обработка нажатия Enter
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    console.log(e.key);
+    e.preventDefault(); // Предотвратить стандартное поведение
+    document.querySelector('.search-wrapper').style.top = '90%'; // Сдвиг строки поиска вверх
+    statsContainer.classList.add('hidden');  // Скрытие статистики
   }
 });
 
@@ -111,7 +121,7 @@ searchInput.addEventListener('input', (e) => {
 function filterLinks(searchQuery) {
   const allListItems = document.querySelectorAll('li');
   
-  allListItems.forEach((li, index) => {
+  allListItems.forEach((li) => {
     const link = li.querySelector('a');
     const dateSpan = li.querySelector('.date');
     
