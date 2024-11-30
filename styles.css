@@ -272,39 +272,6 @@ input, textarea, select {
     align-items: center;
 }
 
-#data-list {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px; /* Расстояние между элементами */
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-}
-
-#data-list li {
-    flex: 1; /* Каждый элемент будет занимать равную долю ширины */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 0.8em; /* Размер шрифта для ссылок */
-}
-
-#data-list li a {
-    display: block;
-    width: 100%; /* Кнопка должна занимать всю ширину ячейки */
-    background-color: #2980b9;
-    color: white;
-    text-decoration: none;
-    padding: 10px;
-    border-radius: 5px;
-    box-sizing: border-box;
-    transition: background-color 0.3s;
-}
-
-#data-list li a:hover {
-    background-color: #1c658c;
-}
 
 /* Стили для заголовка */
 .active-links h3 {

@@ -41,7 +41,7 @@ async function loadAllDataFromFirestore() {
     querySnapshot.forEach((doc) => {
       const url = doc.data().url;
       const timestamp = doc.data().timestamp;
-      const date = new Date(timestamp.seconds * 1000);  // Преобразование в JavaScript Date
+      const date = new Date(timestamp);  // Преобразование в JavaScript Date
       const formattedDate = date.toLocaleString();
 
       // Добавляем ссылку в массив

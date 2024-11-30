@@ -64,61 +64,93 @@
         // Получение текущей ссылки страницы
         const currentUrl = window.location.href;
 
+        // Функция для вычисления расстояния Левенштейна между двумя строками
+        function levenshtein(a, b) {
+            const tmp = [];
+            let i, j, alen = a.length, blen = b.length, cost;
+            if (alen === 0) { return blen; }
+            if (blen === 0) { return alen; }
+            for (i = 0; i <= alen; i++) { tmp[i] = [i]; }
+            for (j = 0; j <= blen; j++) { tmp[0][j] = j; }
+            for (i = 1; i <= alen; i++) {
+                for (j = 1; j <= blen; j++) {
+                    cost = (a[i - 1] === b[j - 1]) ? 0 : 1;
+                    tmp[i][j] = Math.min(tmp[i - 1][j] + 1, tmp[i][j - 1] + 1, tmp[i - 1][j - 1] + cost);
+                }
+            }
+            return tmp[alen][blen];
+        }
+
+        // Функция для проверки схожести между текущим URL и ссылками в базе данных
+        async function isUrlSimilar(url) {
+            const threshold = 0.8;  // Порог схожести (80%)
+            const querySnapshot = await getDocs(collection(db, "urls"));
+            let similarFound = false;
+            
+            querySnapshot.forEach((doc) => {
+                const storedUrl = doc.data().url;
+                const distance = levenshtein(url, storedUrl);
+                const maxLength = Math.max(url.length, storedUrl.length);
+                const similarity = 1 - (distance / maxLength); // Считаем схожесть как 1 - нормированное расстояние Левенштейна
+
+                if (similarity > threshold) {
+                    similarFound = true; // Если схожесть больше порога, считаем ссылку похожей
+                }
+            });
+
+            return similarFound;
+        }
+
         // Функция для отправки текущей ссылки в Firestore
         async function sendUrlToFirestore() {
             try {
-                await addDoc(collection(db, "urls"), {
-                    url: currentUrl,
-                    timestamp: new Date().toISOString()
-                });
-            } catch (error) {
-                console.error("Err url:", error);
-            }
-        }
-
-        // Функция для получения и отображения последних 5 URL из базы данных
-        async function displayDataFromFirestore() {
-            try {
-                const q = query(collection(db, "urls"), orderBy("timestamp", "desc"), limit(3));
-                const querySnapshot = await getDocs(q);
-                
-                // Очистим список перед добавлением новых данных
-                const dataList = document.getElementById("data-list");
-                if (dataList) {
-                    dataList.innerHTML = "";
+                // Проверяем, существует ли уже ссылка или схожая
+                const urlIsSimilar = await isUrlSimilar(currentUrl);
+                if (!urlIsSimilar) {
+                    // Если схожих URL нет, добавляем текущий URL в базу данных
+                    await addDoc(collection(db, "urls"), {
+                        url: currentUrl,
+                        timestamp: new Date().toISOString()
+                    });
+                    console.log("URL добавлен в базу данных.");
+                } else {
+                    console.log("Этот URL или его слишком схожая версия уже существует в базе данных.");
                 }
 
-                querySnapshot.forEach((doc) => {
-                    const url = doc.data().url;
-                    const timestamp = doc.data().timestamp; // Получаем временную метку записи
+                // Проверяем, сколько ссылок в базе данных
+                const querySnapshot = await getDocs(collection(db, "urls"));
+                const urlCount = querySnapshot.size; // Количество документов в коллекции
 
-                    // Преобразуем временную метку в объект Date
-                    const date = new Date(timestamp);
+                // Если ссылок больше 5, очищаем базу данных
+                if (urlCount > 30) {
+                    console.log("Количество ссылок больше 30. Очищаем базу данных.");
+                    await clearDatabase();  // Очищаем базу данных
+                }
 
-                    // Форматируем дату в строку (например, "YYYY-MM-DD HH:mm")
-                    const formattedDate = date.toLocaleString(); // Вы можете настроить формат по своему усмотрению
-
-                    // Создаем ссылку с датой записи
-                    const li = document.createElement("li");
-                    const link = document.createElement("a");
-                    link.href = url; // Устанавливаем href для кликабельности
-                    link.textContent = `Date: ${formattedDate}`; // Отображаем дату записи вместо 8 символов
-
-                    // Добавляем ссылку в список
-                    li.appendChild(link);
-                    dataList.appendChild(li);
-                });
             } catch (error) {
-                console.error("Err:", error);
+                console.error("Ошибка при добавлении URL:", error);
             }
         }
 
+        // Функция для очистки базы данных
+        async function clearDatabase() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "urls")); // Получаем все документы из коллекции "urls"
+                
+                // Для каждого документа в коллекции удаляем его
+                querySnapshot.forEach(async (docSnapshot) => {
+                    await deleteDoc(doc(db, "urls", docSnapshot.id)); // Удаляем документ по ID
+                });
+
+                console.log("База данных очищена.");
+            } catch (error) {
+                console.error("Ошибка при очистке базы данных:", error);
+            }
+        }
 
         // Отправляем текущую ссылку в базу данных
         sendUrlToFirestore();
 
-        // Отображаем первые 5 записей из базы данных
-        displayDataFromFirestore();
     </script>
 
 
@@ -131,10 +163,7 @@
         <header>
             <div class="app-header">
                 <a href="#top" onclick="copy()" nonce="xyz123">TODO</a>
-                <div class="active-links">
-                    <h3>Sample:</h3>
-                    <ul id="data-list"></ul>
-                </div>
+                <a href="home/">LOOK</a>
                 <div class="tabs-container">
                     <button class="tab" nonce="xyz123" onclick="openNewBoardTab()">DESK</button>
                     <button class="tab" nonce="xyz123" onclick="openAddTaskModal()">TASK</button>
