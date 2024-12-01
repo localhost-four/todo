@@ -34,6 +34,11 @@
     <link rel="icon" sizes="192x192" href="1img.gif">
     <link rel="icon" sizes="512x512" href="1img.gif">
 
+    <!-- Манифест для PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <link href="%PUBLIC_URL%/manifest.json" rel="manifest" />
+
+
     <!-- Заголовок страницы -->
     <title>TODO List — Task Management App</title>
 
@@ -44,8 +49,8 @@
     <script type="module">
         // Подключение Firebase с использованием ES Modules
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js';
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
-
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
+    
         // Настройки Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDMek24rrioHn3kPaOGDCNIgq1CU7ROVsE",
@@ -56,14 +61,14 @@
             appId: "1:166519588590:web:cb3f6b4e6cba1749a515ff",
             measurementId: "G-45P7VYXPCZ"
         };
-
+    
         // Инициализация Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
+    
         // Получение текущей ссылки страницы
         const currentUrl = window.location.href;
-
+    
         // Функция для вычисления расстояния Левенштейна между двумя строками
         function levenshtein(a, b) {
             const tmp = [];
@@ -80,7 +85,7 @@
             }
             return tmp[alen][blen];
         }
-
+    
         // Функция для проверки схожести между текущим URL и ссылками в базе данных
         async function isUrlSimilar(url) {
             const threshold = 0.8;  // Порог схожести (80%)
@@ -92,18 +97,44 @@
                 const distance = levenshtein(url, storedUrl);
                 const maxLength = Math.max(url.length, storedUrl.length);
                 const similarity = 1 - (distance / maxLength); // Считаем схожесть как 1 - нормированное расстояние Левенштейна
-
+    
                 if (similarity > threshold) {
                     similarFound = true; // Если схожесть больше порога, считаем ссылку похожей
                 }
             });
-
+    
             return similarFound;
         }
-
+    
+        // Функция для фильтрации URL
+        function isValidUrl(url) {
+            // Проверка, что URL не начинается с localhost или 127.0.0.1
+            if (url.includes("127.0.0.1") || url.includes("localhost")) {
+                return false;
+            }
+    
+            // Проверка, что URL начинается с правильного адреса
+            if (!url.startsWith("https://localhost-four.github.io/TODO/")) {
+                return false;
+            }
+    
+            // Проверка, что URL содержит дополнительные данные после домена (например, параметры)
+            if (url === "https://localhost-four.github.io/TODO/" || url === `https://localhost-four.github.io/TODO/?state=%7B"boards"%3A%5B%7B"id"%3A"board1"%2C"name"%3A"Board%201"%2C"emoji"%3A"📝"%2C"backgroundColor"%3A"%23ffffff"%2C"textColor"%3A"%23000000"%2C"style"%3A"flex"%2C"tasks"%3A%5B%5D%7D%5D%2C"activeBoardId"%3Anull%2C"theme"%3A"light"%7D`) {
+                return false;
+            }
+            console.log('Updata');
+            return true;
+        }
+    
         // Функция для отправки текущей ссылки в Firestore
         async function sendUrlToFirestore() {
             try {
+                // Проверка, что URL валиден
+                if (!isValidUrl(currentUrl)) {
+                    console.log("URL не является допустимым. Пропускаем запись.");
+                    return;
+                }
+    
                 // Проверяем, существует ли уже ссылка или схожая
                 const urlIsSimilar = await isUrlSimilar(currentUrl);
                 if (!urlIsSimilar) {
@@ -116,22 +147,22 @@
                 } else {
                     console.log("Этот URL или его слишком схожая версия уже существует в базе данных.");
                 }
-
+    
                 // Проверяем, сколько ссылок в базе данных
                 const querySnapshot = await getDocs(collection(db, "urls"));
                 const urlCount = querySnapshot.size; // Количество документов в коллекции
-
-                // Если ссылок больше 5, очищаем базу данных
+    
+                // Если ссылок больше 30, очищаем базу данных
                 if (urlCount > 30) {
                     console.log("Количество ссылок больше 30. Очищаем базу данных.");
                     await clearDatabase();  // Очищаем базу данных
                 }
-
+    
             } catch (error) {
                 console.error("Ошибка при добавлении URL:", error);
             }
         }
-
+    
         // Функция для очистки базы данных
         async function clearDatabase() {
             try {
@@ -141,22 +172,23 @@
                 querySnapshot.forEach(async (docSnapshot) => {
                     await deleteDoc(doc(db, "urls", docSnapshot.id)); // Удаляем документ по ID
                 });
-
+    
                 console.log("База данных очищена.");
             } catch (error) {
                 console.error("Ошибка при очистке базы данных:", error);
             }
         }
-
+    
         // Отправляем текущую ссылку в базу данных
         sendUrlToFirestore();
-
     </script>
+    
 
 
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer nonce="xyz123"></script>
-
+    <script src="manifest.js" defer nonce="xyz123"></script>
+    <script src="service-worker.js" defer nonce="xyz123"></script>
 </head>
 <body>
     <div class="app-container">

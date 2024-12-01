@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <!-- Манифест для PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <script src="manifest.js" defer></script>
+    <script src="service-worker.js" defer></script>
+    <style>
+        /* Main styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 50px;
+            color: #FF6347;
+            margin-bottom: 20px;
+            animation: slideIn 1s ease-out;
+        }
+
+        p {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInText 1s 0.5s forwards;
+        }
+
+        .button {
+            padding: 12px 30px;
+            font-size: 18px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 10px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .button:hover {
+            background-color: #004a99;
+            transform: scale(1.1);
+        }
+
+        nav {
+            margin-top: 30px;
+        }
+
+        nav a {
+            font-size: 18px;
+            color: #0066cc;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #FF6347;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Highlight and wiki-like text styles */
+        .highlight {
+            background-color: #FFEE58;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .todo-description {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            animation: fadeInText 1s 1s forwards;
+            text-align: left;
+        }
+
+        .todo-description h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .todo-description p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* Interactive accordion style */
+        .accordion {
+            background-color: #0066cc;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .accordion:hover {
+            background-color: #004a99;
+        }
+
+        .panel {
+            padding: 0 18px;
+            display: none;
+            background-color: #f1f1f1;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            border-top: none;
+            margin-top: 10px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            p {
+                font-size: 18px;
+            }
+
+            .button {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+
+            nav a {
+                font-size: 16px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 30px;
+            }
+
+            .button {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+
+            nav a {
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>404 - Page Not Found</h1>
+        <p>Oops! The page you're looking for doesn't exist.</p>
+    
+        <div class="todo-description">
+            <a href="/"><span class="highlight">TODO Manager</span></a>
+            <p>Organizing your tasks by priority will help you focus on the most important and urgent ones first. You can also group tasks into categories to keep everything organized.</p>
+            
+            <nav>
+                <p>You can also visit these pages:</p>
+                <a href="/" class="button">Start for free</a> |
+                <a href="/home" class="button">Find Pages</a> |
+                <a href="/public" class="button">About Us</a>
+            </nav>
+            <!-- Interactive accordion for deeper explanation -->
+            <button class="accordion">Learn more about organizing tasks</button>
+            <div class="panel">
+
+                <h2>What is a TODO Manager?</h2>
+                <p>A <a href="/"><span class="highlight">TODO Manager</span></a> is a tool designed for managing and tracking your daily tasks.</p>
+                <ul style="text-align: left; margin: 10px 0 10px 20px;">
+                    <li>Open access</li>
+                    <li>Organize tasks by categories and priorities.</li>
+                </ul>
+                <p>The <a href="/"><span class="highlight">TODO Manager</span></a> helps you stay organized and increase productivity by allowing you to plan and track your tasks easily in a clean interface.</p>
+                <p>With a <a href="/"><span class="highlight">TODO Manager</span></a>, you can create a task list, set priorities, and follow your progress.</p>    
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Accordion functionality
+        var acc = document.getElementsByClassName("accordion");
+        for (var i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+                console.log('Service Worker зарегистрирован успешно:', registration);
+            }).catch(function(error) {
+                console.log('Ошибка при регистрации Service Worker:', error);
+            });
+        }
+    </script>
+
+    
+</body>
+</html>

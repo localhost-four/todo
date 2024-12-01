@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tabbed Content</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Манифест для PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <script src="/manifest.js" defer></script>
+    <script src="/service-worker.js" defer></script>
+</head>
+<body>
+
+    <h1>Tabbed Content Using <code>tabs</code> & <code>link</code></h1>
+    
+    <div class="tabs">
+        <details class="tab" name="tab" tabindex="1" open>
+            <summary>The Code</summary>
+            <div class="tab-contents-wrapper">
+                <div class="tab-contents">
+                    <h2>How to start using this platform?</h2>
+                    <p>Experimental content with <code>tabs</code> for your ease of use.</p>
+                    <ul>
+                        <li>Uses <code><a href="/home">home</a></code> use the assembly search bar.</li>
+                        <li>Uses <code><a href="/about">about</a></code> to learn the latest technologies.</li>
+                        <li>Uses <code><a href="/">index</a></code> to separate the summary from the content.</li>
+                        <li>Uses <code><a href="/public">public</a></code> access for beta testing.</li>
+                    </ul>
+                </div>
+                
+            </div>
+        </details>
+
+        <details class="tab" name="tab" tabindex="2">
+            <summary>About</summary>
+            <div class="tab-contents-wrapper">
+                <div class="tab-contents">
+                    <img src="/1img.gif" alt="Home">
+                    <h2><a href="/">TODO List - Task Management App</a></h2>
+                    <br>
+                    <p>Manage your tasks effectively. Share your TODO list offline and with others. 
+                        Access your tasks anytime, anywhere.
+                        Efficiently organize your daily responsibilities with our intuitive task management system. Create, edit, and prioritize your TODO list effortlessly, ensuring that you stay on top of your commitments. Share your tasks offline with colleagues, friends, or family, fostering collaboration and accountability. 
+
+                        Our platform also allows you to categorize and set deadlines for your tasks, helping you to visualize your workload better. Enjoy the flexibility to access your tasks anytime, anywhere, whether you’re on your computer, tablet, or smartphone. With user-friendly features and a seamless interface, managing your tasks has never been easier. Stay focused, productive, and achieve your goals with confidence!
+                        </p>
+                </div>
+            </div>
+        </details>
+
+        <details class="tab" name="tab" tabindex="4">
+            <summary>Start now</summary>
+            <div class="tab-contents-wrapper">
+                <div class="tab-contents">
+                    <h2>You can also visit these pages:</h2>
+                    <nav>
+                        <a href="/" class="button">Start for free</a> |
+                        <a href="/home" class="button">Find Pages</a> |
+                        <a href="/public" class="button">BETA</a>
+                    </nav>
+                </div>
+            </div>
+        </details>
+        
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

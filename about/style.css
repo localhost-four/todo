@@ -1,0 +1,371 @@
+.tabs {
+    --tabs-line-clr: var(--clr-primary);
+    --tabs-line-thickness: 1px;
+    --tabs-height: 30px;
+  
+    --tab-width: 100px;
+    --tab-font-size: 1rem;
+    --tab-clr: var(--clr-primary);
+    --tab-clr-hover: var(--clr-secondary);
+    
+    --tab-indicator-height: 5px;
+    --tab-indicator-clr: var(--clr-secondary);
+    
+    position: relative;
+    width: min(calc(100% - 1rem), 600px);
+    display: flex;
+    flex-wrap: wrap;
+    align-content: start;
+    gap: 0rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Добавлена тень */
+    border-radius: 10px;
+    transition: box-shadow 300ms ease-in-out;
+}
+
+@media (max-width: 600px) {
+    .tabs {
+        --tab-width: 70px;
+        --tab-font-size: .8rem;
+    }
+}
+
+/* линия под вкладками */
+.tabs::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: var(--tabs-line-thickness);
+    top: var(--tabs-height);
+    background-color: var(--tabs-line-clr);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Тень для линии */
+}
+
+/* индикатор текущей вкладки */
+.tabs::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--tabs-height) - var(--tab-indicator-height) / 2);
+    left: 0;
+    width: var(--tab-indicator-width,0px);
+    height: var(--tab-indicator-height);
+    border-radius: 99px;
+    transition: translate 300ms ease-in-out, width 300ms ease-in-out,
+      opacity 300ms ease-in-out;
+    background-color: var(--tab-indicator-clr);
+    translate: var(--tab-indicator-x);
+    opacity: var(--tab-indicator-opacity, 1);
+}
+
+/* фокус и открытие вкладок */
+.tabs:has(details:nth-child(1) > summary:focus-visible),
+.tabs:has(details[open]:nth-child(1)) {
+    --tab-indicator-x: calc(var(--tab-width) * 0);
+    --tab-indicator-width: var(--tab-width);
+}
+.tabs:has(details:nth-child(2) > summary:focus-visible),
+.tabs:has(details[open]:nth-child(2)) {
+    --tab-indicator-x: calc(var(--tab-width) * 1);
+    --tab-indicator-width: var(--tab-width);
+}
+.tabs:has(details:nth-child(3) > summary:focus-visible),
+.tabs:has(details[open]:nth-child(3)) {
+    --tab-indicator-x: calc(var(--tab-width) * 2);
+    --tab-indicator-width: var(--tab-width);
+}
+.tabs:has(details:nth-child(4) > summary:focus-visible),
+.tabs:has(details[open]:nth-child(4)) {
+    --tab-indicator-x: calc(var(--tab-width) * 3);
+    --tab-indicator-width: var(--tab-width);
+}
+
+/* фокус без открытия (только клавиатура) */
+.tabs:has(details:not([open]):nth-child(1) > summary:focus-visible),
+.tabs:has(details:not([open]):nth-child(2) > summary:focus-visible),
+.tabs:has(details:not([open]):nth-child(3) > summary:focus-visible),
+.tabs:has(details:not([open]):nth-child(4) > summary:focus-visible) {
+    --tab-indicator-opacity: 0.5;
+}
+
+.tabs > details {
+    display: contents;
+}
+
+.tabs > details[open] {
+    --tab-contents-grid-rows: 1fr;
+}
+
+.tabs > details > summary {
+    font-size: var(--tab-font-size);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: block;
+    order: 0;
+    height: var(--tab-height);
+    width: var(--tab-width);
+    color: var(--tab-clr);
+    display: grid;
+    place-content: center;
+    list-style: none;
+    transition: color 300ms ease-in-out, transform 150ms ease-in-out;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Добавлена тень для вкладок */
+    border-radius: 5px;
+}
+
+.tabs > details > summary:hover,
+.tabs > details > summary:focus-visible {
+    color: var(--tab-clr-hover);
+    transform: scale(1.05); /* Легкое увеличение при ховере */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Увеличение тени при ховере */
+}
+
+.tabs > details > .tab-contents-wrapper {
+    order: 1;
+    width: 100%;
+    display: grid;
+    grid-template-rows: var(--tab-contents-grid-rows, 0fr);
+    margin-top: 1rem;
+    transition: grid-template-rows 300ms ease-in-out;
+}
+
+.tabs > details .tab-contents {
+    overflow: hidden;
+}
+
+/* анимация при открытии */
+.tabs > details[open] .tab-contents > * {
+    animation: slide-up 1000ms ease-out;
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        translate: 0 30px;
+    }
+    to {
+        opacity: 1;
+        translate: 0;
+    }
+}
+
+/* стили для контента */
+.tab-contents {
+    padding-top: 1rem;
+    line-height: 1.5;
+    color: rgb(229, 229, 229);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* Вставленная тень для контента */
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tab-contents > h2 {
+    font-size: 1.1rem;
+    margin-block-end: 0.5rem;
+}
+
+.tab-contents li {
+    margin-block: .5rem;
+}
+
+.tabs > details .tab-contents p + p {
+    margin-top: 1rem;
+}
+
+.tabs > details .tab-contents > img {
+    width: 60px;
+    aspect-ratio: 1;
+    float: left;
+    margin-right: 0.5rem;
+    border-radius: 10px;
+}
+
+/* стили для галереи */
+.gallery {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 120px;
+    grid-auto-rows: 120px;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block-end: 1rem;
+}
+
+.gallery > div {
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.gallery > div > img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    transition: scale 1000ms ease-in-out, rotate 1000ms ease-in-out;
+}
+
+.gallery > div > img:hover {
+    scale: 1.1;
+    rotate: -5deg;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Добавление тени для галереи */
+}
+
+/* стили для контактной формы */
+div label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 300;
+    font-size: 0.8rem;
+}
+
+div input,
+div textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background-color: rgba(255 255 255 / 0.4);
+    transition: background-color 300ms ease-in-out, box-shadow 300ms ease-in-out;
+}
+
+div input:focus-visible,
+div textarea:focus-visible {
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.4); /* Тень при фокусе */
+}
+
+div button {
+    padding: 10px;
+    background-color: var(--clr-secondary);
+    border: none;
+    outline: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 150ms ease-in-out;
+}
+
+div button:focus-visible,
+div button:hover {
+    background-color: rgb(7 89 133);
+    transform: scale(1.05); /* Легкое увеличение кнопки */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Увеличение тени при ховере */
+}
+
+/* общие стили */
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --clr-bg: #222;
+    --clr-txt: #111;
+    --clr-primary: rgb(248, 250, 252);
+    --clr-secondary: rgb(56, 189, 248);
+}
+
+html {
+    background-color: var(--clr-bg);
+    font-family: system-ui;
+}
+
+body {
+    min-height: 100svh;
+
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    color: var(--clr-primary);
+    padding: 1rem;
+
+    display: inline-block;
+    transition: all 0.3s;
+    outline: none;
+}
+
+h1 {
+    font-size: clamp(1rem, 2.5vw + 0.25rem, 1.2rem);
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+code, pre {
+    display: inline-block;
+    color: #38bdf8;
+    border: 1px solid hsl(from var(--clr-primary) h s 50% / 0.5);
+    padding: 0.25rem 1rem;
+    border-radius: 5px;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+em {
+    font-size: 0.8rem;
+}
+
+nav {
+    margin-top: 30px;
+}
+
+nav a {
+    font-size: 18px;
+    color: #0066cc;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #FF6347;
+}
+
+a:link, a:visited, a:hover, a:active {
+    color: inherit; /* Убирает изменение цвета при различных состояниях */
+    text-decoration: none; /* Убирает подчеркивание */
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 36px;
+    }
+
+    p {
+        font-size: 18px;
+    }
+
+    .button {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+
+    nav a {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    .button {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    nav a {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+}

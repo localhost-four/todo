@@ -5,7 +5,12 @@
     "main": "index.js",
     "scripts": {
       "start": "live-server", 
-      "deploy": "firebase deploy"
+      "deploy": "firebase deploy",
+      "start": "react-scripts start", // Стартует приложение в разработке
+      "build": "react-scripts build", // Создает билд
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "predeploy": "npm run build"
     },
     "keywords": [
       "firebase",
@@ -21,6 +26,9 @@
     },
     "devDependencies": {
       "firebase-tools": "^11.0.0"
-    }
+    },
+
+    "homepage": "https://localhost-four.github.io/TODO/" // Укажите адрес вашего репозитория на GitHub Pages
+  
   }
   
