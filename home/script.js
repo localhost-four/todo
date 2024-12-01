@@ -31,6 +31,7 @@ function truncateLink(link) {
 }
 
 // Загрузка всех данных из Firestore
+// Загрузка всех данных из Firestore
 async function loadAllDataFromFirestore() {
   try {
     const q = query(collection(db, 'urls'), orderBy('timestamp', 'desc'));
@@ -67,7 +68,7 @@ async function loadAllDataFromFirestore() {
     });
 
     // Обновление статистики
-    updateStats(querySnapshot.size);
+    updateStats();  // Обновляем статистику, получая данные из базы
     dataList.classList.remove('hidden');  // Показать список после загрузки
 
   } catch (error) {
@@ -75,22 +76,34 @@ async function loadAllDataFromFirestore() {
   }
 }
 
-// Обновление статистики (Всего ссылок и Ссылок за сегодня)
-async function updateStats(totalLinksCount) {
-  const today = new Date();
-  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-  const q = query(
+// Обновление статистики (Всего ссылок и Ссылок за сегодня)
+async function updateStats() {
+  const today = new Date();
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()); // Начало дня
+  const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1); // Конец дня
+
+  // Запрос для получения всех ссылок
+  const allLinksQuery = query(collection(db, 'urls'));
+  const allLinksSnapshot = await getDocs(allLinksQuery);
+  const totalLinksCount = allLinksSnapshot.size;  // Общее количество ссылок
+
+  // Запрос для получения ссылок за сегодня
+  const todayLinksQuery = query(
     collection(db, 'urls'),
-    where('timestamp', '>=', Timestamp.fromDate(startOfDay))
+    where('timestamp', '>=', Timestamp.fromDate(startOfDay)),
+    where('timestamp', '<', Timestamp.fromDate(endOfDay))
   );
 
-  const todayLinksSnapshot = await getDocs(q);
-  const todayLinksCount = todayLinksSnapshot.size;
+  const todayLinksSnapshot = await getDocs(todayLinksQuery);
+  const todayLinksCount = todayLinksSnapshot.size;  // Количество ссылок за сегодня
 
-  totalLinksSpan.textContent = totalLinksCount;
-  linksTodaySpan.textContent = todayLinksCount;
+  // Обновляем статистику на странице
+  totalLinksSpan.textContent = totalLinksCount;  // Общее количество ссылок
+  linksTodaySpan.textContent = todayLinksCount;  // Количество ссылок за сегодня
 }
+
+
 
 // Обработка ввода в строку поиска
 searchInput.addEventListener('input', (e) => {
