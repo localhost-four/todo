@@ -119,7 +119,7 @@ button:hover {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%; /* Сделано шире для мобильных устройств */
-    max-width: 200px; /* Ограничение максимальной ширины */
+    min-width: 200px; /* Ограничение максимальной ширины */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
 }
@@ -250,7 +250,6 @@ input, textarea, select {
         max-width: 60px; /* Уменьшение размера изображений на маленьких экранах */
     }
 }
-
 
 /* Общие стили для кнопки TODO */
 .app-header {

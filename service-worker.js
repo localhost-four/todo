@@ -1,10 +1,10 @@
 const CACHE_NAME = 'my-site-cache-v2';
 const urlsToCache = [
-  '/',
-  'index.html',
-  'styles.css',
-  'script.js',
-  '1img.gif'
+  '/TODO/index.html',
+  '/TODO/index.html',
+  '/TODO/styles.css',
+  '/TODO/script.js',
+  '/TODO/1img.gif'
 ];
 
 // Устанавливаем сервис-воркер и кэшируем необходимые файлы

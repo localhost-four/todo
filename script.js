@@ -135,6 +135,39 @@ function addTask() {
 }
 
 
+// Функция для редактирования задачи
+function editTask(boardId, taskId) {
+    const board = boards.find(b => b.id === boardId);
+    const task = board.tasks.find(t => t.id === taskId);
+
+    if (task) {
+        document.getElementById('taskTitle').value = task.title;
+        document.getElementById('taskDescription').value = task.description;
+        document.getElementById('taskDeadline').value = task.deadline;
+        document.getElementById('taskImageUrl').value = task.imageUrl;
+        document.getElementById('taskLink').value = task.link;
+        document.getElementById('taskPriority').value = task.priority;
+        openAddTaskModal();  // Открываем модальное окно с данными для редактирования
+    }
+}
+
+// Функция для удаления задачи
+function deleteTask(boardId, taskId) {
+    const board = boards.find(b => b.id === boardId);
+    if (board) {
+        board.tasks = board.tasks.filter(task => task.id !== taskId);
+        renderBoards();
+        saveStateToURL();
+    }
+}
+
+// Функция для удаления доски
+function deleteBoard(boardId) {
+    boards = boards.filter(board => board.id !== boardId);
+    renderBoards();
+    saveStateToURL();
+}
+
 function renderTasks(board) {
     const taskBoard = document.getElementById(board.id);
     taskBoard.innerHTML = '';
@@ -156,6 +189,8 @@ function renderTasks(board) {
             <p>Deadline: ${task.deadline}</p>
             <p>Priority: ${task.priority}</p>
             <button onclick="openCommentModal('${board.id}', '${task.id}')">Add Comment</button>
+            <button onclick="editTask('${board.id}', '${task.id}')">Clone</button>
+            <button onclick="deleteTask('${board.id}', '${task.id}')">Delete</button>
             <div class="comments">
                 ${task.comments.map(comment => {
                     let commentHtml = `<p>${comment.text || ''}</p>`;
