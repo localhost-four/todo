@@ -1,10 +1,10 @@
 const CACHE_NAME = 'my-site-cache-v2';
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/styles.css',
-  '/script.js',
-  '/1img.gif'
+  'index.html',
+  'styles.css',
+  'script.js',
+  '1img.gif'
 ];
 
 // Устанавливаем сервис-воркер и кэшируем необходимые файлы
@@ -44,4 +44,4 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-navigator.serviceWorker.register('/service-worker.js')
+navigator.serviceWorker.register('service-worker.js')

@@ -11,15 +11,9 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault(); // Отменить стандартное поведение
     let deferredPrompt = e;
-    const installButton = document.createElement('button');
-    installButton.innerText = 'Install';
-    document.body.appendChild(installButton);
-
-    installButton.addEventListener('click', () => {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            console.log(choiceResult.outcome === 'accepted' ? 'The user installed the application' : 'The user rejected the installation');
-            deferredPrompt = null;
-        });
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+        console.log(choiceResult.outcome === 'accepted' ? 'The user installed the application' : 'The user rejected the installation');
+        deferredPrompt = null;
     });
 });
