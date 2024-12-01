@@ -233,8 +233,149 @@ function saveStateToLocalStorage() {
     localStorage.setItem('todoAppState', JSON.stringify(state));
 }
 
+// notifications.js
+
+// Функция для запроса разрешения на уведомления
+function requestNotificationPermission() {
+    if (Notification.permission === "default") {
+        Notification.requestPermission().then(permission => {
+            if (permission !== "granted") {
+                console.warn("Notification permission denied.");
+            }
+        });
+    }
+}
+
+// Функция для отображения уведомлений
+function showNotification(title, body) {
+    try {
+        const notification = new Notification(title, {
+            body: body,
+            icon: '1img.gif',  // Укажите путь к иконке уведомления (необязательно)
+            tag: 'task-notification',  // Используется для замены существующего уведомления
+        });
+
+        notification.onclick = function () {
+            window.focus();  // При клике на уведомление фокусируется на текущем окне
+            notification.close();
+        };
+    } catch(n) {
+        // В случае, если уведомления не доступны, используем fallback
+        alert(`${title}\n${body}`);
+        console.log(n);
+    }
+}
+
+
+function checkTasksForNotifications(state) {
+    const now = new Date();
+
+    // Получаем завтрашний день
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() + 1);
+
+    // Находим начало текущей недели (воскресенье)
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());  // Устанавливаем день недели на воскресенье
+
+    // Находим конец текущей недели (суббота)
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);  // Устанавливаем субботу
+
+    // Функция для сортировки задач по приоритету
+    const priorityOrder = {
+        high: 1,
+        medium: 2,
+        low: 3
+    };
+
+    // Проверяем каждую доску и задачу
+    state.boards.forEach(board => {
+        // Сортируем задачи по приоритету перед проверкой
+        board.tasks.sort((a, b) => {
+            const priorityA = priorityOrder[a.priority] || 3;  // По умолчанию low
+            const priorityB = priorityOrder[b.priority] || 3;
+            return priorityA - priorityB;
+        });
+
+        board.tasks.forEach(task => {
+            const title = task.title;
+            const description = task.description;
+            const deadline = task.deadline;  // Дата дедлайна задачи
+            
+            // Преобразуем строку дедлайна в объект Date
+            const taskDeadline = new Date(deadline);
+
+            // Сравниваем только год, месяц и день, игнорируя время
+            const isSameDay = now.getFullYear() === taskDeadline.getFullYear() &&
+                              now.getMonth() === taskDeadline.getMonth() &&
+                              now.getDate() === taskDeadline.getDate();
+
+            // Проверка на завтрашний день
+            const isTomorrow = tomorrow.getFullYear() === taskDeadline.getFullYear() &&
+                               tomorrow.getMonth() === taskDeadline.getMonth() &&
+                               tomorrow.getDate() === taskDeadline.getDate();
+
+            // Проверка, если задача в пределах текущей недели
+            const isThisWeek = taskDeadline >= startOfWeek && taskDeadline <= endOfWeek;
+
+            // Уведомление, если задача на сегодня, завтра или в пределах текущей недели
+            if (isSameDay || isTomorrow || isThisWeek) {
+                let notificationMessage = `Your task "${description}" is due on ${taskDeadline.toDateString()}.`;
+
+                if (isTomorrow) {
+                    notificationMessage = `Reminder: Tomorrow, your task "${description}". Deadline: ${taskDeadline.toDateString()}.`;
+                }
+
+                if (isThisWeek) {
+                    notificationMessage = `Reminder: Task "${description}" due this week on ${taskDeadline.toDateString()}.`;
+                }
+
+                showNotification(
+                    `Task Reminder: ${title}> ${task.priority}`,  // Заголовок уведомления 
+                    notificationMessage
+                );
+            }
+        });
+    });
+}
+
+
+// Функция для извлечения состояния из URL и парсинга JSON
+function getStateFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const stateParam = urlParams.get('state');
+    if (stateParam) {
+        try {
+            const state = JSON.parse(decodeURIComponent(stateParam));
+            return state;  // Возвращаем распарсенное состояние
+        } catch (error) {
+            console.error('Ошибка при парсинге state из URL:', error);
+            return null;
+        }
+    }
+    return null;
+}
+
+
+// Функция для инициализации уведомлений на основе состояния из URL
+function initNotifications() {
+    const state = getStateFromURL();
+    if (state) {
+        requestNotificationPermission();  // Запросить разрешение на уведомления
+        checkTasksForNotifications(state);  // Проверить задачи на уведомления
+    } else {
+        console.error('State не найден в URL.');
+    }
+}
+
+// Интервал для периодической проверки задач (каждые 10 минут)
+setTimeout(() => {
+    initNotifications();  // Периодическая проверка задач
+}, 2500);  // Интервал 10 минут
+
 // Функция для загрузки состояния из LocalStorage
-function loadStateFromLocalStorage() {
+function loadStateFromLocalStorage() {    
     const state = localStorage.getItem('todoAppState');
     if (state) {
         try {
@@ -249,6 +390,7 @@ function loadStateFromLocalStorage() {
             console.error('Error loading state from LocalStorage:', error);
         }
     }
+
 }
 
 
