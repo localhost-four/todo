@@ -108,6 +108,7 @@
     
         // Функция для фильтрации URL
         function isValidUrl(url) {
+            console.log('check...');
             // Проверка, что URL не начинается с localhost или 127.0.0.1
             if (url.includes("127.0.0.1") || url.includes("localhost")) {
                 return false;
@@ -119,10 +120,10 @@
             }
     
             // Проверка, что URL содержит дополнительные данные после домена (например, параметры)
-            if (url === "https://localhost-four.github.io/TODO/" || url === `https://localhost-four.github.io/TODO/?state=%7B"boards"%3A%5B%7B"id"%3A"board1"%2C"name"%3A"Board%201"%2C"emoji"%3A"📝"%2C"backgroundColor"%3A"%23ffffff"%2C"textColor"%3A"%23000000"%2C"style"%3A"flex"%2C"tasks"%3A%5B%5D%7D%5D%2C"activeBoardId"%3Anull%2C"theme"%3A"light"%7D`) {
+            if (url === "https://localhost-four.github.io/TODO/") {
                 return false;
             }
-            console.log('Updata');
+            console.log('Updata: '+url);
             return true;
         }
     
@@ -199,7 +200,7 @@
                 <div class="tabs-container">
                     <button class="tab" nonce="xyz123" onclick="openNewBoardTab()">DESK</button>
                     <button class="tab" nonce="xyz123" onclick="openAddTaskModal()">TASK</button>
-                    <button class="tab" id="theme-button" onclick="themes()">#</button>
+                    <button class="tab" id="theme-button" onclick="themes()">|</button>
                 </div>
             </div>
         </header>
@@ -207,11 +208,6 @@
             <div id="tabs"></div>
         </div>
 
-        <div class="task-container" id="task-container">
-            <!-- Доски будут добавляться сюда -->
-        </div>
-
-        <!-- Доски -->
         <div class="task-container" id="task-container">
             <!-- Доски будут добавляться сюда -->
         </div>

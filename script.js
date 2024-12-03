@@ -248,6 +248,47 @@ function saveStateToLocalStorage() {
 
 // notifications.js
 
+
+// Функция для добавления сообщения на страницу
+function displayMessage(mess) {
+    var message = document.createElement('div');
+    message.innerText = JSON.stringify(mess);
+    message.style.position = 'fixed';
+    message.style.top = '0';
+    message.style.left = '15%';
+    message.style.transform = 'translateX(-100%)';
+    message.style.background = 'lightblue';
+    message.style.color = 'white';
+    message.style.padding = '10px';
+    message.style.borderRadius = '5px';
+    message.style.zIndex = '9998';
+    message.style.transition = 'all 0.5s ease';
+    
+    document.body.appendChild(message);
+    
+    setTimeout(function() {
+        message.style.top = '-100px';
+        try {
+            document.getElementsByTagName("title")[0].innerHTML = mess;
+        } catch(n) {
+            document.title = mess;
+        }
+        setTimeout(function() {
+            message.remove();
+            try {
+                document.getElementsByTagName("title")[0].innerHTML = 'Plugin';
+            } catch(n) {
+                document.title = 'Plugin';
+            }
+        }, 500);
+    }, 2600);
+    
+    var messages = document.querySelectorAll('div');
+    messages.forEach(function(msg, index) {
+        msg.style.transform = 'translateX(' + (messages.length - index) * 300 + 'px)';
+    });
+}
+
 // Функция для запроса разрешения на уведомления
 function requestNotificationPermission() {
     if (Notification.permission === "default") {
@@ -265,7 +306,7 @@ function showNotification(title, body) {
         const notification = new Notification(title, {
             body: body,
             icon: '1img.gif',  // Укажите путь к иконке уведомления (необязательно)
-            tag: 'task-notification',  // Используется для замены существующего уведомления
+            tag: title,  // Используется для замены существующего уведомления
         });
 
         notification.onclick = function () {
@@ -274,8 +315,13 @@ function showNotification(title, body) {
         };
     } catch(n) {
         // В случае, если уведомления не доступны, используем fallback
-        alert(`${title}\n${body}`);
-        console.log(n);
+        try { 
+            console.log(n);
+            displayMessage(`${title}\n${body}`); 
+        } catch(n) { 
+            console.log(n);
+            alert(`${title}\n${body}`);
+        }
     }
 }
 
@@ -369,6 +415,7 @@ function getStateFromURL() {
 }
 
 
+
 // Функция для инициализации уведомлений на основе состояния из URL
 function initNotifications() {
     const state = getStateFromURL();
@@ -376,7 +423,7 @@ function initNotifications() {
         requestNotificationPermission();  // Запросить разрешение на уведомления
         checkTasksForNotifications(state);  // Проверить задачи на уведомления
     } else {
-        console.error('State не найден в URL.');
+        showNotification(`Welcome back ${navigator.userAgent.split(' ')[0].slice(0, 12)}`, `Glad to see you, workspace is cleaned.`);
     }
 }
 
