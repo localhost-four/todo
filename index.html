@@ -111,16 +111,19 @@
             console.log('check...');
             // Проверка, что URL не начинается с localhost или 127.0.0.1
             if (url.includes("127.0.0.1") || url.includes("localhost")) {
+                console.log('include 1');
                 return false;
             }
     
             // Проверка, что URL начинается с правильного адреса
             if (!url.startsWith("https://localhost-four.github.io/TODO/")) {
+                console.log('include 2');
                 return false;
             }
     
             // Проверка, что URL содержит дополнительные данные после домена (например, параметры)
             if (url === "https://localhost-four.github.io/TODO/") {
+                console.log('include 3');
                 return false;
             }
             console.log('Updata: '+url);
@@ -154,8 +157,8 @@
                 const urlCount = querySnapshot.size; // Количество документов в коллекции
     
                 // Если ссылок больше 30, очищаем базу данных
-                if (urlCount > 30) {
-                    console.log("Количество ссылок больше 30. Очищаем базу данных.");
+                if (urlCount > 500) {
+                    console.log("Количество ссылок больше 500. Очищаем базу данных.");
                     await clearDatabase();  // Очищаем базу данных
                 }
     
