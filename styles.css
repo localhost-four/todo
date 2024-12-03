@@ -107,6 +107,11 @@ body.dark-theme {
     border-radius: 30px; /* Увеличен радиус для более круглых кнопок */
 }
 
+#taskDescription {
+    resize: vertical; /* Разрешаем изменение размера только по горизонтали */
+}
+
+
 .app-header a:hover {
     background-color: #45a049;
     color: blanchedalmond;
