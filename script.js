@@ -2,6 +2,18 @@ let boards = []; // Массив досок
 let boardCounter = 1; // Счётчик досок
 let activeBoardId = null; // Активная доска
 
+function themes() {
+    // Переключение темы
+    if (document.body.classList.contains('light-theme')) {
+        document.body.classList.remove('light-theme');
+        document.body.classList.add('dark-theme');
+    } else {
+        document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
+    }
+    saveStateToLocalStorage();
+};
+
 // Функция для открытия вкладки новой доски
 function openNewBoardTab() {
     addBoard(); // Добавляем новую доску
@@ -188,9 +200,10 @@ function renderTasks(board) {
             <p>${task.description}</p>
             <p>Deadline: ${task.deadline}</p>
             <p>Priority: ${task.priority}</p>
-            <button onclick="openCommentModal('${board.id}', '${task.id}')">Add Comment</button>
-            <button onclick="editTask('${board.id}', '${task.id}')">Clone</button>
-            <button onclick="deleteTask('${board.id}', '${task.id}')">Delete</button>
+            <button onclick="openCommentModal('${board.id}', '${task.id}')">💬Add</button>
+            <button onclick="editTask('${board.id}', '${task.id}')">🔁Rep</button>
+            <button onclick="deleteTask('${board.id}', '${task.id}')">🗑Del</button>
+            <button onclick="deleteBoard('${board.id}')">✖All</button>
             <div class="comments">
                 ${task.comments.map(comment => {
                     let commentHtml = `<p>${comment.text || ''}</p>`;
@@ -307,13 +320,11 @@ function checkTasksForNotifications(state) {
             const taskDeadline = new Date(deadline);
 
             // Сравниваем только год, месяц и день, игнорируя время
-            const isSameDay = now.getFullYear() === taskDeadline.getFullYear() &&
-                              now.getMonth() === taskDeadline.getMonth() &&
+            const isSameDay = now.getMonth() === taskDeadline.getMonth() ||
                               now.getDate() === taskDeadline.getDate();
 
             // Проверка на завтрашний день
-            const isTomorrow = tomorrow.getFullYear() === taskDeadline.getFullYear() &&
-                               tomorrow.getMonth() === taskDeadline.getMonth() &&
+            const isTomorrow = tomorrow.getMonth() === taskDeadline.getMonth() ||
                                tomorrow.getDate() === taskDeadline.getDate();
 
             // Проверка, если задача в пределах текущей недели

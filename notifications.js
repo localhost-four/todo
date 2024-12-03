@@ -16,7 +16,7 @@ function showNotification(title, body) {
     if (Notification.permission === "granted") {
         const notification = new Notification(title, {
             body: body,
-            icon: 'path/to/icon.png',  // Укажите путь к иконке уведомления (необязательно)
+            icon: '1img.gif',  // Укажите путь к иконке уведомления (необязательно)
             tag: 'task-notification',  // Используется для замены существующего уведомления
         });
 
@@ -51,7 +51,7 @@ function checkTasksForNotifications() {
         console.log(taskDeadline);
         // Проверяем, если дата задачи совпадает с сегодняшним днем
         if (taskDeadline.getFullYear() === now.getFullYear() &&
-            taskDeadline.getMonth() === now.getMonth() &&
+            taskDeadline.getMonth() === now.getMonth() ||
             taskDeadline.getDate() === now.getDate()) {
             
             // Если задача на сегодня, отправляем уведомление
