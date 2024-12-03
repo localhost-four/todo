@@ -110,7 +110,7 @@
         function isValidUrl(url) {
             console.log('check...');
             // Проверка, что URL не начинается с localhost или 127.0.0.1
-            if (url.includes("127.0.0.1") || url.includes("localhost")) {
+            if (url.includes("127.0.0.1") || url.includes(":3000")) {
                 console.log('include 1');
                 return false;
             }
