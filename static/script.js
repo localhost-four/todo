@@ -1,98 +1,53 @@
-// Инициализация переменных
-let totalTime = 0;
-let editingTime = 0;
-let pageVisits = 0;
-let editingStartTime = null;
-let previousPages = [];
+// Replace with your GitHub username and the repository name
+const USERNAME = "localhost-four"; // e.g., "octocat"
+const REPO_NAME = "TODO"; // e.g., "your-repo-name"
 
-// Функция для обновления времени на странице
-function updateStatistics() {
-    const totalTimeSpan = document.getElementById('total-time');
-    const editingTimeSpan = document.getElementById('editing-time');
-    const pageVisitsSpan = document.getElementById('page-visits');
-    const lastVisitSpan = document.getElementById('last-visit');
+// Function to fetch repository information
+async function fetchRepoInfo() {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${USERNAME}/${REPO_NAME}`);
+        if (!response.ok) throw new Error('Network response was not ok');
 
-    totalTimeSpan.textContent = totalTime;
-    editingTimeSpan.textContent = editingTime;
-    pageVisitsSpan.textContent = pageVisits;
-    
-    const lastVisit = localStorage.getItem('last-visit');
-    lastVisitSpan.textContent = lastVisit ? new Date(lastVisit).toLocaleString() : 'Неизвестно';
-}
-
-// Функция для начала отслеживания времени редактирования
-function startEditing() {
-    editingStartTime = Date.now();
-}
-
-// Функция для остановки отслеживания времени редактирования
-function stopEditing() {
-    if (editingStartTime) {
-        editingTime += Math.floor((Date.now() - editingStartTime) / 1000); // в секундах
-        editingStartTime = null;
+        const data = await response.json();
+        
+        document.getElementById('repo-name').textContent = data.name || "Unknown";
+        document.getElementById('repo-created').textContent = new Date(data.created_at).toLocaleDateString() || "Unknown";
+        document.getElementById('repo-stars').textContent = data.stargazers_count || 0;
+        document.getElementById('repo-forks').textContent = data.forks_count || 0;
+        document.getElementById('repo-last-commit').textContent = data.pushed_at ? new Date(data.pushed_at).toLocaleString() : "Unknown";
+        document.getElementById('current-url').textContent = window.location.href; // Current page URL
+    } catch (error) {
+        console.error('Failed to fetch repository info:', error);
     }
 }
 
-// Слушаем события на странице для подсчета времени
-window.addEventListener('load', () => {
-    // Время работы на странице
-    const startTime = Date.now();
-    let totalTimer = setInterval(() => {
-        totalTime = Math.floor((Date.now() - startTime) / 1000); // в секундах
-        updateStatistics();
-        updateChart();
-    }, 1000);
+// Function to fetch recent commits
+async function fetchRecentCommits() {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${USERNAME}/${REPO_NAME}/commits`);
+        if (!response.ok) throw new Error('Network response was not ok');
 
-    // Событие при смене страницы
-    window.addEventListener('beforeunload', () => {
-        localStorage.setItem('last-visit', new Date().toISOString());
-        pageVisits++;
-        updateStatistics();
-    });
+        const commits = await response.json();
+        
+        const commitsList = document.getElementById('commits-list');
+        commitsList.innerHTML = ""; // Clear "Loading..." message
 
-    // Запоминаем посещенные страницы
-    previousPages.push(window.location.href);
-    localStorage.setItem('visited-pages', JSON.stringify(previousPages));
-
-    // Событие начала редактирования
-    const textArea = document.querySelector('textarea');
-    if (textArea) {
-        textArea.addEventListener('focus', startEditing);
-        textArea.addEventListener('blur', stopEditing);
+        commits.forEach(commit => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${commit.commit.message} - ${commit.commit.author.name} on ${new Date(commit.commit.author.date).toLocaleString()}`;
+            commitsList.appendChild(listItem);
+        });
+    } catch (error) {
+        console.error('Failed to fetch commits:', error);
+        document.getElementById('commits-list').textContent = 'Failed to fetch commits.';
     }
+}
 
-    // Обновляем статистику на странице
-    updateStatistics();
-    updateChart();
+// Fetch repository info and recent commits on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchRepoInfo();
+    fetchRecentCommits();
 });
 
-// Функция для обновления кругового графика
-function updateChart() {
-    const ctx = document.getElementById('activityChart').getContext('2d');
-
-    const activityChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Время на сайте', 'Время редактирования', 'Прочее'],
-            datasets: [{
-                data: [totalTime, editingTime, totalTime - editingTime], // Измените логику для учёта других данных
-                backgroundColor: ['#4CAF50', '#FF9800', '#f4f4f9'],
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.raw + " секунд";
-                        }
-                    }
-                }
-            }
-        }
-    });
-}
+// Fetch repository info on page load
+document.addEventListener('DOMContentLoaded', fetchRepoInfo);
