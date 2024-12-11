@@ -312,6 +312,7 @@ function showNot(message, duration = 8000) {
             left: 20px;
             background-color: #4caf50; /* Цвет фона */
             color: white; /* Цвет текста */
+            opacity: 0.8;
             padding: 10px;
             margin: 5px;
             border-radius: 5px;
@@ -321,7 +322,7 @@ function showNot(message, duration = 8000) {
             z-index: 1000;
         }
         .notification.show {
-            opacity: 1;
+            opacity: 0.6;
         }
     `;
 
