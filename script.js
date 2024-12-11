@@ -14,6 +14,36 @@ function themes() {
     saveStateToLocalStorage();
 };
 
+// Функция для инициализации Sortable для вкладок и задач
+function initSortable() {
+    // Инициализация Sortable для вкладок
+    const tabsContainer = document.getElementById('tabs');
+    new Sortable(tabsContainer, {
+        animation: 150,
+        onEnd: function (evt) {
+            const movedBoard = boards.splice(evt.oldIndex, 1)[0];
+            boards.splice(evt.newIndex, 0, movedBoard);
+            renderBoards(); // Обновляем отображение вкладок
+            saveStateToURL(); // Сохраняем состояние в URL
+        }
+    });
+
+    // Инициализация Sortable для задач
+    const taskContainers = document.querySelectorAll('.task-board');
+    taskContainers.forEach(taskContainer => {
+        new Sortable(taskContainer, {
+            animation: 150,
+            onEnd: function (evt) {
+                const board = boards.find(b => b.id === taskContainer.id);
+                const movedTask = board.tasks.splice(evt.oldIndex, 1)[0];
+                board.tasks.splice(evt.newIndex, 0, movedTask);
+                renderTasks(board); // Обновляем отображение задач
+                saveStateToURL(); // Сохраняем состояние в URL
+            }
+        });
+    });
+}
+
 // Функция для открытия вкладки новой доски
 function openNewBoardTab() {
     addBoard(); // Добавляем новую доску
@@ -41,11 +71,12 @@ function closeSettings() {
 
 // Функция для добавления новой доски
 function addBoard() {
+    const getRandomEmoji = () => ['📝', '📅','💾','📁','📃','📄','📒','📓','📚','📙','📑','📰','📂','📋', '🔖', '🗂️', '🖊️'][Math.floor(Math.random() * 7)];
     const boardId = `board${boardCounter++}`;
     const newBoard = {
         id: boardId,
         name: `Board ${boardCounter - 1}`,
-        emoji: '📝',
+        emoji: getRandomEmoji(),
         backgroundColor: '#ffffff',
         textColor: '#000000',
         style: 'flex',
@@ -67,7 +98,9 @@ function renderBoards() {
     boards.forEach(board => {
         const tabButton = document.createElement('button');
         tabButton.classList.add('tab');
-        tabButton.innerHTML = `${board.emoji} ${board.name}`;
+        tabButton.innerHTML = `        
+        <span>${board.emoji} ${board.name}</span>
+        <span class="arrow" onclick="moveTabDown('${board.id}')">></span>`;
         tabButton.onclick = () => openBoard(board.id);
         tabButton.ondblclick = () => openSettings(board.id);
         tabsContainer.appendChild(tabButton);
@@ -83,6 +116,19 @@ function renderBoards() {
 
         renderTasks(board); // Отображаем задачи
     });
+
+    // Инициализация Sortable после отрисовки досок
+    initSortable();
+}
+
+// Функция для перемещения вкладки вниз
+function moveTabDown(boardId) {
+    const index = boards.findIndex(board => board.id === boardId);
+    if (index < boards.length - 1) {
+        const [movedBoard] = boards.splice(index, 1);
+        boards.splice(index + 1, 0, movedBoard);
+        renderBoards(); // Обновляем отображение вкладок
+    }
 }
 
 // Функция для открытия доски
@@ -196,7 +242,7 @@ function renderTasks(board) {
         const taskCard = document.createElement('div');
         taskCard.classList.add('task-card');
         taskCard.innerHTML = `
-            <h3>${task.title}</h3>
+            <h3 href="#${task.title}">${task.title}</h3>
             <p>${task.description}</p>
             <p>Deadline: ${task.deadline}</p>
             <p>Priority: ${task.priority}</p>
@@ -234,8 +280,6 @@ function renderFilePreview(file) {
     return `<p>File: ${file.name}</p>`;
 }
 
-
-
 // Функция для сохранения состояния в LocalStorage
 function saveStateToLocalStorage() {
     const state = {
@@ -259,6 +303,57 @@ function requestNotificationPermission() {
     }
 }
 
+function showNot(message, duration = 8000) {
+    // Создание стилей для уведомления
+    const styles = `
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #4caf50; /* Цвет фона */
+            color: white; /* Цвет текста */
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 1000;
+        }
+        .notification.show {
+            opacity: 1;
+        }
+    `;
+
+    // Создание элемента style и добавление стилей в документ
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = styles;
+    document.head.appendChild(styleSheet);
+
+    // Создание элемента уведомления
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+
+    // Добавление уведомления на страницу
+    document.body.appendChild(notification);
+
+    // Анимация появления
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10); // Небольшая задержка для срабатывания анимации
+
+    // Удаление уведомления через определенное время
+    setTimeout(() => {
+        notification.classList.remove('show');
+        // Удаляем элемент из DOM после завершения анимации
+        notification.addEventListener('transitionend', () => {
+            document.body.removeChild(notification);
+        });
+    }, duration);
+}
+
 // Функция для отображения уведомлений
 function showNotification(title, body) {
     try {
@@ -274,7 +369,7 @@ function showNotification(title, body) {
         };
     } catch(n) {
         // В случае, если уведомления не доступны, используем fallback
-        alert(`${title}\n${body}`);
+        showNot(`${title}\n${body}`);
     }
 }
 
@@ -376,7 +471,7 @@ function initNotifications() {
         requestNotificationPermission();  // Запросить разрешение на уведомления
         checkTasksForNotifications(state);  // Проверить задачи на уведомления
     } else {
-        showNotification(`Welcome back ${navigator.userAgent.split(' ')[0].slice(0, 12)}`, `Glad to see you, workspace is cleaned.`);
+        showNotification(`Welcome back ${navigator.userAgent.split('(')[1].slice(0, 12)}`, `Glad to see you, workspace is cleaned.`);
     }
 }
 
@@ -539,5 +634,10 @@ function copy() {
     document.execCommand('copy');
 }
 
+
+
 // Загрузка состояния из URL при старте
-window.onload = loadStateFromURL;
+window.onload = function() {
+    loadStateFromURL();
+    initSortable(); // Инициализация Sortable после загрузки состояния
+};

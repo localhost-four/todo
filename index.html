@@ -156,9 +156,9 @@
                 const querySnapshot = await getDocs(collection(db, "urls"));
                 const urlCount = querySnapshot.size; // Количество документов в коллекции
     
-                // Если ссылок больше 30, очищаем базу данных
-                if (urlCount > 500) {
-                    console.log("Количество ссылок больше 500. Очищаем базу данных.");
+                // Если ссылок больше 180, очищаем базу данных
+                if (urlCount > 180) {
+                    console.log("Количество ссылок больше 180. Очищаем базу данных.");
                     await clearDatabase();  // Очищаем базу данных
                 }
     
@@ -187,7 +187,7 @@
         sendUrlToFirestore();
     </script>
     
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer nonce="xyz123"></script>
@@ -203,7 +203,7 @@
                 <div class="tabs-container">
                     <button class="tab" nonce="xyz123" onclick="openNewBoardTab()">DESK</button>
                     <button class="tab" nonce="xyz123" onclick="openAddTaskModal()">TASK</button>
-                    <button class="tab" id="theme-button" onclick="themes()">*</button>
+                    <button class="tab" id="theme-button" onclick="themes()">/</button>
                 </div>
             </div>
         </header>
@@ -255,6 +255,10 @@
                     <option value="block">Block</option>
                     <option value="grid">Grid</option>
                     <option value="flex">Flex</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="inline">Inline</option>
+                    <option value="contents">Contents</option>
+                    <option value="flow-root">Flow-root</option>
                 </select>
                 <button onclick="applyBoardSettings()" nonce="xyz123">Apply</button>
                 

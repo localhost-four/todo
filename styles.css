@@ -107,11 +107,6 @@ body.dark-theme {
     border-radius: 30px; /* Увеличен радиус для более круглых кнопок */
 }
 
-#taskDescription {
-    resize: vertical; /* Разрешаем изменение размера только по горизонтали */
-}
-
-
 .app-header a:hover {
     background-color: #45a049;
     color: blanchedalmond;
@@ -150,7 +145,50 @@ button:hover {
 }
 
 .tab.active {
+    position: absolute;
+    top: 0;
+    right: 0;
     background-color: #1c658c;
+    border-radius: 5px;
+    padding: 5px;
+    display: none;
+}
+
+.tab-actions button {
+    margin: 5px;
+}
+
+.arrow {
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 16px;
+    /* display: none; Скрываем стрелки по умолчанию */
+}
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 80%;
+    min-height: 80%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
 }
 
 /* Доски */
@@ -223,6 +261,7 @@ input, textarea, select {
     margin: 10px 0;
     border-radius: 5px;
     border: 1px solid #ddd;
+    resize: vertical;
 }
 
 .file-preview img, .file-preview iframe {
@@ -265,7 +304,7 @@ input, textarea, select {
     }
 
     .modal-content {
-        width: 80%; /* Уменьшение размера модального окна для мобильных */
+        min-width: 80%; /* Уменьшение размера модального окна для мобильных */
     }
 
     button {
@@ -296,7 +335,7 @@ input, textarea, select {
     }
 
     .modal-content {
-        width: 95%; /* Почти на всю ширину экрана */
+        max-width: 95%; /* Почти на всю ширину экрана */
     }
 
     button {
