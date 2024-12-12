@@ -14,35 +14,6 @@ function themes() {
     saveStateToLocalStorage();
 };
 
-// Функция для инициализации Sortable для вкладок и задач
-function initSortable() {
-    // Инициализация Sortable для вкладок
-    const tabsContainer = document.getElementById('tabs');
-    new Sortable(tabsContainer, {
-        animation: 150,
-        onEnd: function (evt) {
-            const movedBoard = boards.splice(evt.oldIndex, 1)[0];
-            boards.splice(evt.newIndex, 0, movedBoard);
-            renderBoards(); // Обновляем отображение вкладок
-            saveStateToURL(); // Сохраняем состояние в URL
-        }
-    });
-
-    // Инициализация Sortable для задач
-    const taskContainers = document.querySelectorAll('.task-board');
-    taskContainers.forEach(taskContainer => {
-        new Sortable(taskContainer, {
-            animation: 150,
-            onEnd: function (evt) {
-                const board = boards.find(b => b.id === taskContainer.id);
-                const movedTask = board.tasks.splice(evt.oldIndex, 1)[0];
-                board.tasks.splice(evt.newIndex, 0, movedTask);
-                renderTasks(board); // Обновляем отображение задач
-                saveStateToURL(); // Сохраняем состояние в URL
-            }
-        });
-    });
-}
 
 // Функция для открытия вкладки новой доски
 function openNewBoardTab() {
@@ -100,7 +71,8 @@ function renderBoards() {
         tabButton.classList.add('tab');
         tabButton.innerHTML = `        
         <span>${board.emoji} ${board.name}</span>
-        <span class="arrow" onclick="moveTabDown('${board.id}')">></span>`;
+        <span class="arrow" onclick="openSettings('${board.id}')">/s</span>
+        <span class="arrow" onclick="moveTabDown('${board.id}')">m></span>`;
         tabButton.onclick = () => openBoard(board.id);
         tabButton.ondblclick = () => openSettings(board.id);
         tabsContainer.appendChild(tabButton);
@@ -116,9 +88,7 @@ function renderBoards() {
 
         renderTasks(board); // Отображаем задачи
     });
-
-    // Инициализация Sortable после отрисовки досок
-    initSortable();
+    saveStateToURL();
 }
 
 // Функция для перемещения вкладки вниз
@@ -303,7 +273,7 @@ function requestNotificationPermission() {
     }
 }
 
-function showNot(message, duration = 8000) {
+function showNot(message, duration = 3000) {
     // Создание стилей для уведомления
     const styles = `
         .notification {
@@ -539,6 +509,7 @@ function loadStateFromURL() {
 
 // Функция для открытия настроек доски
 function openSettings(boardId) {
+    console.log('okay!');
     const board = boards.find(b => b.id === boardId);
     if (!board) return;
 
@@ -638,7 +609,4 @@ function copy() {
 
 
 // Загрузка состояния из URL при старте
-window.onload = function() {
-    loadStateFromURL();
-    initSortable(); // Инициализация Sortable после загрузки состояния
-};
+window.onload = loadStateFromURL();
