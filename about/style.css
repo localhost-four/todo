@@ -18,7 +18,7 @@
     align-content: start;
     gap: 0rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Добавлена тень */
-    border-radius: 10px;
+    border-radius: 20px;
     transition: box-shadow 300ms ease-in-out;
 }
 
@@ -33,7 +33,7 @@
 .tabs::before {
     content: "";
     position: absolute;
-    width: 100%;
+    min-width: 100%;
     height: var(--tabs-line-thickness);
     top: var(--tabs-height);
     background-color: var(--tabs-line-clr);
@@ -121,7 +121,7 @@
 
 .tabs > details > .tab-contents-wrapper {
     order: 1;
-    width: 100%;
+    min-width: 100%;
     display: grid;
     grid-template-rows: var(--tab-contents-grid-rows, 0fr);
     margin-top: 1rem;
@@ -294,8 +294,8 @@ h1 {
 code, pre {
     display: inline-block;
     color: #38bdf8;
-    border: 1px solid hsl(from var(--clr-primary) h s 50% / 0.5);
-    padding: 0.25rem 1rem;
+    border: 2px solid hsl(from var(--clr-primary) h s 50% / 0.5);
+    padding: 0.50rem 1rem;
     border-radius: 5px;
 }
 

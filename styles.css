@@ -60,7 +60,6 @@ body.dark-theme {
 .dark-theme #theme-button {
     background-color: #333;
     border-color: #f0f0f0;
-    content: "🌞";
 }
 
 /* Эффект при наведении на кнопку */
