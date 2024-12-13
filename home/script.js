@@ -31,7 +31,6 @@ function truncateLink(link) {
 }
 
 // Загрузка всех данных из Firestore
-// Загрузка всех данных из Firestore
 async function loadAllDataFromFirestore() {
   try {
     const q = query(collection(db, 'urls'), orderBy('timestamp', 'desc'));
