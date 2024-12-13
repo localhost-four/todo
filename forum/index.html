@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="script.js" defer></script>
+
+    <!-- Мета-теги SEO для обоих языков -->
+    <meta name="description" content="TODO List - Forum Archive">
+    <meta name="keywords" content="Most of the information about projects is on this site, here you can evaluate your work directly on the forum">
+    <meta name="author" content="localhost-four.github.io">
+
+    <!-- Open Graph для социальных сетей (Facebook, LinkedIn, WhatsApp) -->
+    <meta property="og:title" content="TODO List - Forum Archive">
+    <meta property="og:description" content="Most of the information about projects is on this site, here you can evaluate your work directly on the forum">
+    <meta property="og:image" content="/TODO/1img.gif">
+    <meta property="og:url" content="https://localhost-four.github.io/TODO/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TODO List">
+    
+    <!-- Мета-теги для Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="TODO List - Forum Archive">
+    <meta name="twitter:description" content="Most of the information about projects is on this site, here you can evaluate your work directly on the forum">
+    <meta name="twitter:image" content="/TODO/1img.gif">
+    <meta name="twitter:url" content="https://localhost-four.github.io/TODO/">
+
+    <!-- Иконки для мобильных устройств -->
+    <link rel="icon" href="/TODO/1img.gif">
+    <link rel="apple-touch-icon" href="/TODO/1img.gif">
+    <link rel="icon" sizes="192x192" href="/TODO/1img.gif">
+    <link rel="icon" sizes="512x512" href="/TODO/1img.gif">
+
+    <!-- Манифест для PWA -->
+    <link rel="manifest" href="/TODO/manifest.json">
+    <script src="/TODO/manifest.js" defer></script>
+    <script src="/TODO/service-worker.js" defer></script>
+
+</head>
+<body>
+    <h1>Forum Archive</h1>
+    
+    <div id="filter-controls">
+        <label for="min-rating">Min Rating:</label>
+        <input type="number" id="min-rating" value="0" onchange="updateFilters()">
+        <label for="max-rating">Max Rating:</label>
+        <input type="number" id="max-rating" value="5" onchange="updateFilters()">
+        
+        <label for="min-date">Min Date:</label>
+        <input type="date" id="min-date" onchange="updateFilters()">
+        <script nonce="xyz123">
+            document.getElementById('min-date').value = new Date().toISOString().split('T')[0];
+        </script>
+        <label for="max-date">Max Date:</label>
+        <input type="date" id="max-date" onchange="updateFilters()">
+        <script nonce="xyz123">
+            document.getElementById('max-date').value = new Date().toISOString().split('T')[0];
+        </script>
+    </div>
+
+    <div id="links-container"></div>
+
+    <!-- Modal for Editing Links -->
+    <div id="link-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal();">&times;</span>
+            <h2 id="modal-title">Edit Link</h2>
+            <input type="hidden" id="link-id">
+            <label for="link-title">Title:</label>
+            <input type="text" id="link-title" required>
+            <label for="link-url">URL:</label>
+            <input type="text" id="link-url" required>
+            <button id="save-button" onclick="saveLink();">Save</button>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Comments -->
+    <div id="comment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCommentModal()">&times;</span>
+            <h2>Add Comment</h2>
+            <input type="hidden" id="comment-link-id">
+            <label for="comment-text">Comment:</label>
+            <textarea id="comment-text" required></textarea>
+            <button id="add-comment-button" onclick="addComment()">Add Comment</button>
+        </div>
+    </div>
+
+</body>
+</html>

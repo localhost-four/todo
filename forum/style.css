@@ -1,0 +1,157 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#filter-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px; /* Space between controls */
+    margin-bottom: 20px;
+}
+
+#filter-controls label {
+    font-weight: bold;
+}
+
+#filter-controls input[type="number"],
+#filter-controls input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+#filter-controls input[type="number"]:focus,
+#filter-controls input[type="date"]:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+#links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    transition: transform 0.2s, box-shadow 0.2s; /* Transition for hover effects */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card .tags {
+    font-size: 0.9em;
+    color: #888;
+}
+
+.card button {
+    margin: 5px 0;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.card button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed; /* Остается на месте */
+    z-index: 1; /* На переднем плане */
+    left: 0;
+    top: 0;
+    width: 100%; /* Полная ширина */
+    height: 100%; /* Полная высота */
+    overflow: auto; /* Включить прокрутку, если необходимо */
+    background-color: rgba(0, 0, 0, 0.7); /* Темный фон с прозрачностью */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* Центрирование */
+    padding: 20px;
+    border-radius: 8px; /* Закругленные углы */
+    width: 80%; /* Может быть больше или меньше, в зависимости от размера экрана */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s; /* Анимация появления */
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.comment {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+}
+
+.comment:hover {
+    background-color: #e9ecef; /* Light gray on hover */
+}
+
+.comments {
+    margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    #filter-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #filter-controls label {
+        margin-right: 10px;
+    }
+}
+
+Find More

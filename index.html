@@ -88,7 +88,7 @@
     
         // Функция для проверки схожести между текущим URL и ссылками в базе данных
         async function isUrlSimilar(url) {
-            const threshold = 0.8;  // Порог схожести (80%)
+            const threshold = 0.6;  // Порог схожести (60%)
             const querySnapshot = await getDocs(collection(db, "urls"));
             let similarFound = false;
             
@@ -192,7 +192,7 @@
     <script src="manifest.js" defer nonce="xyz123"></script>
     <script src="service-worker.js" defer nonce="xyz123"></script>
 </head>
-<body>
+<body allowfullscreen="allowfullscreen">
     <div class="app-container">
         <header>
             <div class="app-header">
