@@ -1,26 +1,4 @@
-// Функция для установки заголовков безопасности
-function setSecurityHeaders() {
-    const metaXContentTypeOptions = document.createElement('meta');
-    metaXContentTypeOptions.httpEquiv = "X-Content-Type-Options";
-    metaXContentTypeOptions.content = "nosniff";
-    document.head.appendChild(metaXContentTypeOptions);
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    // Вызов функции для установки заголовков
-    setSecurityHeaders();
-
-    var images = document.querySelectorAll("img");
-    images.forEach(function(img) {
-        img.onerror = function() {
-            window.location.href = "/404.html";
-        };
-        img.src = "404.html"; // Блокируем загрузку изображения
-    });
-
-
-
-    /*
+/*
  * This file is part of the Safetyai.ru package.
  *
  * (c) Safetyai.ru company
@@ -103,12 +81,6 @@ if (sessionStorage.getItem('pageReloaded')) {
 if (window.location.href === document.referrer) {
     window.location.href = '404.html';
 }
-
-window.addEventListener('popstate', function (event) {
-// пользователь открыл страницу
-document.body.style.display = "block";
-document.body.style.textAlign = "block";
-});
 
 // knife URL
 function Navigate(){   
