@@ -25,6 +25,29 @@
     <meta name="twitter:image" content="1img.gif">
     <meta name="twitter:url" content="https://localhost-four.github.io/TODO/">
 
+    <!-- Защита от XSS с помощью Content Security Policy (CSP) -->
+    <meta http-equiv="Content-Security-Policy" content="
+        img-src 'self' data:; 
+        font-src 'self'; 
+        connect-src 'self'; 
+        object-src 'none'; 
+        frame-ancestors 'none'; 
+        base-uri 'self'; 
+        form-action 'self';
+    ">
+    <!-- Защита от кликджекинга -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <!-- Установка заголовка X-Content-Type-Options -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <!-- Установка заголовка Strict-Transport-Security (HSTS) через мета-тег -->
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+    <!-- Защита от кросс-доменных запросов (CORS) -->
+    <meta http-equiv="Access-Control-Allow-Origin" content="self">
+    <!-- Установка заголовка Permissions-Policy для управления доступом к API -->
+    <meta http-equiv="Permissions-Policy" content="geolocation=(self), microphone=(), camera=()">
+    <!-- Защита от реферера -->
+    <meta name="referrer" content="no-referrer">
+
     <!-- Иконки для мобильных устройств -->
     <link rel="icon" href="1img.gif">
     <link rel="apple-touch-icon" href="1img.gif">
@@ -38,6 +61,8 @@
     <!-- Манифест для PWA -->
     <script src="manifest.js" defer></script>
     <script src="service-worker.js" defer></script>
+    
+    <script src="ban.js" defer></script>
     <style>
         /* Main styles */
         body {
@@ -281,6 +306,65 @@
                 }
             });
         }
+
+
+
+        // Список существующих маршрутов
+        const existingRoutes = ['/about', '/static', '/public', '/forum', '/home', '/index', '/404', '/'];
+
+        // Функция для поиска похожего маршрута
+        function findSimilarRoute(url) {
+            const urlParts = url.split('/').filter(Boolean); // Разделяем URL на части
+            const lastPart = urlParts[urlParts.length - 1]; // Получаем последний сегмент URL
+
+            // Проверяем каждую часть URL
+            for (const route of existingRoutes) {
+                const routeParts = route.split('/').filter(Boolean);
+                if (lastPart === routeParts[routeParts.length - 1]) {
+                    return route; // Если совпадает последний сегмент, возвращаем существующий маршрут
+                }
+            }
+
+            return null; // Если не найдено подходящего маршрута
+        }
+
+        // Функция для конвертации URL
+        function convertURL() {
+            const currentUrl = window.location.href; // Получаем текущий URL
+            const url = new URL(currentUrl); // Создаем объект URL
+            
+            // Получаем параметры из URL
+            const params = url.searchParams;
+            const convertedParts = [];
+
+            // Перебираем параметры и добавляем их в массив
+            params.forEach((value, key) => {
+                convertedParts.push(`${key}/${value}`);
+            });
+
+            // Формируем конвертированный URL
+            const convertedUrl = `/${convertedParts.join('/')}`;
+
+            // Обновляем адресную строку браузера
+            history.replaceState(null, '', convertedUrl);
+        }
+
+        // Функция для обработки перенаправления
+        function handleRedirect() {
+            const currentUrl = window.location.pathname; // Получаем текущий URL
+            const newUrl = findSimilarRoute(currentUrl);
+
+            if (newUrl) {
+                // Если найден похожий маршрут, перенаправляем пользователя
+                window.location.href = newUrl;
+            } else {
+                // Если похожий маршрут не найден
+                setInterval(convertURL, 8000);
+            }
+        }
+
+        // Выполняем перенаправление при загрузке страницы
+        window.onload = handleRedirect;
     </script>
 
     <script>

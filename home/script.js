@@ -58,7 +58,7 @@ async function loadAllDataFromFirestore() {
 
       const dateSpan = document.createElement('span');
       dateSpan.classList.add('date');
-      dateSpan.textContent = `Date: ${formattedDate}`;
+      dateSpan.textContent = `Name: ${doc.data().title} Date: ${formattedDate} Rate: ${doc.data().rating}`;
 
       li.appendChild(link);
       li.appendChild(dateSpan);

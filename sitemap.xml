@@ -28,6 +28,11 @@
   <priority>0.64</priority>
 </url>
 <url>
+  <loc>https://localhost-four.github.io/TODO/forum/</loc>
+  <lastmod>2024-12-12T00:54:30+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
   <loc>https://localhost-four.github.io/TODO/public/</loc>
   <lastmod>2024-12-12T00:54:30+00:00</lastmod>
   <priority>0.64</priority>

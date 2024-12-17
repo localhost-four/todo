@@ -43,12 +43,13 @@ function closeSettings() {
 // Функция для добавления новой доски
 function addBoard() {
     const getRandomEmoji = () => ['📝', '📅','💾','📁','📃','📄','📒','📓','📚','📙','📑','📰','📂','📋', '🔖', '🗂️', '🖊️'][Math.floor(Math.random() * 7)];
+    const getRandomBack = () => ['#ffffff', '#00ffff','#f0ffff','#f0f8ff','#faebd7','#8a2be2','#6495ed','#fff8dc','#fffaf0','#f5f5f5','#fff0f5','#fffafa'][Math.floor(Math.random() * 7)];
     const boardId = `board${boardCounter++}`;
     const newBoard = {
         id: boardId,
         name: `Board ${boardCounter - 1}`,
         emoji: getRandomEmoji(),
-        backgroundColor: '#ffffff',
+        backgroundColor: getRandomBack(),
         textColor: '#000000',
         style: 'flex',
         tasks: []
@@ -426,7 +427,11 @@ function getStateFromURL() {
             const state = JSON.parse(decodeURIComponent(stateParam));
             return state;  // Возвращаем распарсенное состояние
         } catch (error) {
-            console.error('Ошибка при парсинге state из URL:', error);
+            let path = url.split("mod=").pop();
+            if (path.length > 0 || path == window.location.host || path == window.location.hostname || path == window.location.origin || path == window.location.href) {
+                window.location.href = '404.html';
+            } 
+
             return null;
         }
     }
@@ -509,7 +514,6 @@ function loadStateFromURL() {
 
 // Функция для открытия настроек доски
 function openSettings(boardId) {
-    console.log('okay!');
     const board = boards.find(b => b.id === boardId);
     if (!board) return;
 
@@ -605,8 +609,6 @@ function copy() {
     // Копируем текст в буфер обмена
     document.execCommand('copy');
 }
-
-
 
 // Загрузка состояния из URL при старте
 window.onload = loadStateFromURL();
