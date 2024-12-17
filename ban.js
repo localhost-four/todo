@@ -43,67 +43,6 @@ console.log('Timeout:', data);
 console.log('version 2.1v');
 
 
-// Слушаем событие нажатия на правую кнопку мыши
-document.addEventListener('contextmenu', function(e) {
-e.preventDefault(); // Отменяем стандартное действие браузера (открытие контекстного меню)
-
-
-try {
-    const panel = document.getElementById('panel');
-    document.body.removeChild(panel);
-} catch(err) {
-    null;
-}
-
-// взять текст со страницы 
-var content = '';
-
-var captionElements = document.querySelectorAll('div');
-captionElements.forEach(function(element) {
-    content += element.textContent + '<br>';
-});
-
-var blob = new Blob([content], { type: 'text/plain' });
-var url = URL.createObjectURL(blob);
-
-
-
-// Создаем элемент панели
-var panel = document.createElement('div');
-panel.id = 'panel';
-panel.style.position = 'absolute';
-panel.style.top = e.clientY + 'px'; // Положение панели по вертикали
-panel.style.left = e.clientX + 'px'; // Положение панели по горизонтали
-panel.style.width = '150px'; // Ширина панели
-panel.style.height = '125px'; // Высота панели
-panel.style.border = '1px solid'; // Граница панели
-panel.style.background = 'var(--txt)';
-
-// Добавляем элемент панели на страницу
-document.body.appendChild(panel);
-
-// Добавим кнопку "Закрыть" на панель
-var closeButton = document.createElement('nav');
-closeButton.innerHTML = `
-<ul>
-    <li><a href="about" target="_self">About</a></li>
-    <li><a href="home" target="_self">Home</a></li>
-    <li><a href="forum" target="_self">Forum</a></li>
-    <li><a data-wow-delay='2s' target="_self" onclick="Save()" download = ` + window.location.origin + `.html href = ` + url + `>Save</a></li>
-</ul>`;
-closeButton.style.stroke="blue";
-closeButton.style.fill="purple";
-closeButton.style.position = 'absolute';
-closeButton.style.bottom = '10px'; // Отступ от нижней границы панели
-closeButton.style.right = '10px'; // Отступ от правой границы панели
-document.body.addEventListener('click', function() {
-    // Удаляем панель при нажатии на кнопку "Закрыть"
-    document.body.removeChild(panel);
-});
-panel.appendChild(closeButton);
-
-});
-
 // COOKIE
 if (navigator.cookieEnabled) {
 null;
