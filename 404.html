@@ -25,6 +25,32 @@
     <meta name="twitter:image" content="1img.gif">
     <meta name="twitter:url" content="https://localhost-four.github.io/TODO/">
 
+    <!-- Robot Follow -->
+    <meta name="robots" content="noindex, follow">
+    <meta name="language" content="en">
+    <meta name="rating" content="General">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Schema.org Structured Data for Better SEO -->
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://localhost-four.github.io/TODO/",
+            "name": "TODO List",
+            "description": "A comprehensive app for task management. Keep your tasks organized and accessible.",
+            "author": {
+                "@type": "Organization",
+                "name": "Your Company Name"
+            },
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://localhost-four.github.io/TODO/?state={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
+    
     <!-- Защита от XSS с помощью Content Security Policy (CSP) -->
     <meta http-equiv="Content-Security-Policy" content="
         img-src 'self' data:; 
