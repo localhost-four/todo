@@ -10,7 +10,7 @@
 
     <!-- Мета-теги SEO для обоих языков -->
     <meta name="description" content="TODO List is a handy notebook for managing tasks. Share your list offline and with others, access it anytime, and improve your productivity.">
-    <meta name="keywords" content="TODO, task list, notebook, productivity, tasks, management">
+    <meta name="keywords" content="TODO, task list, notebook, productivity, tasks, management, save, self, localhost-four, task management, productivity, task list, to-do list, organizational tool, efficient tasks, manage tasks">
     <meta name="author" content="localhost-four.github.io">
 
     <!-- Open Graph для социальных сетей (Facebook, LinkedIn, WhatsApp) -->
@@ -27,6 +27,33 @@
     <meta name="twitter:description" content="Manage your tasks effectively. Share your TODO list offline and with others. Access your tasks anytime, anywhere.">
     <meta name="twitter:image" content="1img.gif">
     <meta name="twitter:url" content="https://localhost-four.github.io/TODO/">
+    
+    <!-- Robot Follow -->
+    <meta name="robots" content="noindex, follow">
+    <meta name="language" content="en">
+    <meta name="rating" content="General">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Schema.org Structured Data for Better SEO -->
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://localhost-four.github.io/TODO/",
+            "name": "TODO List",
+            "description": "A comprehensive app for task management. Keep your tasks organized and accessible.",
+            "author": {
+                "@type": "Organization",
+                "name": "Your Company Name"
+            },
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://localhost-four.github.io/TODO/?state={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
+    
     <!-- Защита от XSS с помощью Content Security Policy (CSP) -->
     <meta http-equiv="Content-Security-Policy" content="
         style-src 'self'; 
