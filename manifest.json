@@ -2,7 +2,7 @@
   "name": "TODO",
   "short_name": "TODO",
   "description": "It is a progressive web application that can be installed on mobile devices and used offline.",
-  "start_url": "/todo/about",
+  "start_url": "/todo/",
   "display": "standalone", 
   "background_color": "#ffffff",
   "theme_color": "#4CAF50",
