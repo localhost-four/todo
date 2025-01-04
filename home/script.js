@@ -15,12 +15,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Получение параметров URL
+const urlParams = new URLSearchParams(window.location.search);
+const searchQueryParam = urlParams.get('q'); // Предполагаем, что параметр называется 'q'
+
 // Elements
 const searchInput = document.getElementById('searchInput');
 const dataList = document.getElementById('data-list');
 const statsContainer = document.getElementById('stats');
 const totalLinksSpan = document.getElementById('totalLinks');
 const linksTodaySpan = document.getElementById('linksToday');
+
+// Если параметр существует, заполняем строку поиска и вызываем фильтрацию
+if (searchQueryParam) {
+  searchInput.value = decodeURIComponent(searchQueryParam); // Заполняем строку поиска
+  filterLinks(searchInput.value.trim().toLowerCase()); // Вызываем функцию фильтрации
+  document.querySelector('.search-wrapper').style.top = '5%'; // Поднимаем строку поиска
+  statsContainer.classList.add('hidden'); // Скрываем статистику
+}
 
 // Массив для хранения всех ссылок
 let allLinks = [];
@@ -108,6 +120,10 @@ async function updateStats() {
 searchInput.addEventListener('input', (e) => {
   const searchQuery = e.target.value.trim().toLowerCase();  // Приводим запрос к нижнему регистру
   filterLinks(searchQuery);
+
+  // Обновляем URL без перезагрузки страницы
+  const newUrl = window.location.pathname + '?q=' + searchQuery;
+  history.replaceState(null, '', newUrl);
 
   // Строка поиска поднимается к шапке при активации
   if (searchQuery !== '') {
