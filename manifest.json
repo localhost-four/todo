@@ -1,27 +1,54 @@
 {
-    "name": "TODO",
-    "short_name": "TODO",
-    "description": "It is a progressive web application that can be installed on mobile devices and used offline.",
-    "start_url": "/TODO/about",
-    "display": "standalone", 
-    "background_color": "#ffffff",
-    "theme_color": "#4CAF50",
-    "icons": [
-      {
-        "src": "1img.gif",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "1img.gif",
-        "sizes": "512x512",
-        "type": "image/png"
-      },
-      {
-        "src": "1img.gif",
-        "sizes": "128x128",
-        "type": "image/png"
-      }
-    ]
-  }
+  "name": "TODO",
+  "short_name": "TODO",
+  "description": "It is a progressive web application that can be installed on mobile devices and used offline.",
+  "start_url": "/todo/about",
+  "display": "standalone", 
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "background": {
+    "service_worker": "notifications.js"
+  },
+  "content_scripts": [
+    {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+    }
+  ],
+  "action": {
+      "default_popup": "popup.html"
+  },
+  "icons": [
+    {
+      "src": "1img.gif",
+      "sizes": "192x192",
+      "type": "image/ico"
+    },
+    {
+      "src": "1img.gif",
+      "sizes": "512x512",
+      "type": "image/ico"
+    },
+    {
+      "src": "1img.gif",
+      "sizes": "128x128",
+      "type": "image/ico"
+    },
+    {
+      "src": "1img.gif",
+      "sizes": "192x192",
+      "type": "image/gif"
+    },
+    {
+      "src": "1img.gif",
+      "sizes": "512x512",
+      "type": "image/gif"
+    },
+    {
+      "src": "1img.gif",
+      "sizes": "128x128",
+      "type": "image/gif"
+    }
+  ]
+}
   

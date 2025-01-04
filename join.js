@@ -67,13 +67,13 @@ function isValidUrl(url) {
     }
 
     // Проверка, что URL начинается с правильного адреса
-    if (!url.startsWith("https://localhost-four.github.io/TODO/")) {
+    if (!url.startsWith("https://localhost-four.github.io/todo/")) {
         console.log('include 2');
         return false;
     }
 
     // Проверка, что URL содержит дополнительные данные после домена (например, параметры)
-    if (url === "https://localhost-four.github.io/TODO/") {
+    if (url === "https://localhost-four.github.io/todo/") {
         console.log('include 3');
         return false;
     }
@@ -86,7 +86,7 @@ async function sendUrlToFirestore() {
     try {
         // Проверка, что URL валиден
         if (!isValidUrl(currentUrl)) {
-            console.log("URL не является допустимым. Пропускаем запись.");
+            console.log("URL - regular type");
             return;
         }
 
@@ -98,9 +98,9 @@ async function sendUrlToFirestore() {
                 url: currentUrl,
                 timestamp: new Date().toISOString()
             });
-            console.log("URL добавлен в базу данных.");
+            console.log("URL - added to database.");
         } else {
-            console.log("Этот URL или его слишком схожая версия уже существует в базе данных.");
+            console.log("This URL or a very similar version already exists in the database.");
         }
 
         // Проверяем, сколько ссылок в базе данных
@@ -109,12 +109,12 @@ async function sendUrlToFirestore() {
 
         // Если ссылок больше 180, очищаем базу данных
         if (urlCount > 180) {
-            console.log("Количество ссылок больше 180. Очищаем базу данных.");
+            console.log("The number of links is more than 180. Cleaning the database.");
             await clearDatabase();  // Очищаем базу данных
         }
 
     } catch (error) {
-        console.error("Ошибка при добавлении URL:", error);
+        console.error("Error adding URL:", error);
     }
 }
 
@@ -128,9 +128,9 @@ async function clearDatabase() {
             await deleteDoc(doc(db, "urls", docSnapshot.id)); // Удаляем документ по ID
         });
 
-        console.log("База данных очищена.");
+        console.log("Cleaning the database.");
     } catch (error) {
-        console.error("Ошибка при очистке базы данных:", error);
+        console.error("Error data:", error);
     }
 }
 

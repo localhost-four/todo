@@ -1,9 +1,9 @@
 // Проверяем поддержку сервис-воркеров и PWA
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-        console.log('Сервис-воркер зарегистрирован:', registration);
+        console.log('Service worker registered:', registration);
     }).catch(function(error) {
-        console.log('Ошибка при регистрации сервис-воркера:', error);
+        console.log('Error registering service worker:', error);
     });
 }
 

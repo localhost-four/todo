@@ -2,6 +2,27 @@ let boards = []; // Массив досок
 let boardCounter = 1; // Счётчик досок
 let activeBoardId = null; // Активная доска
 
+// Создаем элемент input для выбора файла
+// Создаем элемент input для выбора файла
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.id = 'fileInput'; // Изменяем ID для уникальности
+fileInput.accept = 'image/*';
+fileInput.style.display = 'none'; // Скрываем элемент
+document.body.appendChild(fileInput); // Добавляем элемент в body
+
+// Создаем элемент input для выбора прозрачности
+const opacityInput = document.createElement('input');
+opacityInput.type = 'number';
+opacityInput.id = 'opacityInput'; // Изменяем ID для уникальности
+opacityInput.min = '0';
+opacityInput.max = '1';
+opacityInput.step = "0.1";
+opacityInput.value = "1"; // Значение по умолчанию
+opacityInput.placeholder = "Opacity";
+opacityInput.style.display = 'none'; // Скрываем элемент
+document.querySelector('.tabs-container').appendChild(opacityInput); // Добавляем элемент в body
+
 function themes() {
     // Переключение темы
     if (document.body.classList.contains('light-theme')) {
@@ -13,6 +34,59 @@ function themes() {
     }
     saveStateToLocalStorage();
 };
+
+function custom() {
+    // Обработчик событий для выбора файла
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0]; // Получаем выбранный файл
+        if (file) {
+            const reader = new FileReader(); // Создаем новый FileReader
+
+            reader.onload = function(e) {
+                // Устанавливаем изображение как фон
+                document.body.style.backgroundImage = `url(${e.target.result})`;
+                document.body.style.backgroundSize = 'cover'; // Заполняем фон
+                document.body.style.backgroundPosition = 'center'; // Центрируем изображение
+
+                // Сохраняем изображение в localStorage
+                localStorage.setItem('backgroundImage', e.target.result);
+
+                // Показываем поле ввода прозрачности
+                opacityInput.style.display = 'inline';
+            };
+
+            reader.readAsDataURL(file); // Читаем файл как Data URL
+        }
+    });
+
+    // Обработчик событий для изменения прозрачности
+    opacityInput.addEventListener('input', (event) => {
+        const currentOpacity = parseFloat(event.target.value); // Получаем значение прозрачности
+        document.body.style.opacity = currentOpacity; // Устанавливаем прозрачность
+
+        // Сохраняем текущую прозрачность в localStorage
+        localStorage.setItem('opacity', currentOpacity);
+    });
+
+    // Эмулируем клик на скрытом input для выбора файла
+    fileInput.click(); 
+}
+
+// Функция для загрузки настроек из localStorage
+const savedOpacity = localStorage.getItem('opacity');
+const savedImage = localStorage.getItem('backgroundImage');
+
+if (savedOpacity) {
+    currentOpacity = parseFloat(savedOpacity);
+    opacityInput.value = currentOpacity;
+    document.body.style.opacity = currentOpacity;
+}
+
+if (savedImage) {
+    document.body.style.backgroundImage = `url(${savedImage})`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+}
 
 
 // Функция для открытия вкладки новой доски
@@ -52,6 +126,7 @@ function addBoard() {
         backgroundColor: getRandomBack(),
         textColor: '#000000',
         style: 'flex',
+        text: 'left',
         tasks: []
     };
 
@@ -85,6 +160,7 @@ function renderBoards() {
         taskBoard.style.color = board.textColor;
         taskBoard.style.display = 'none';
         taskBoard.style.display = board.style;
+        taskBoard.style.textAlign = board.text;
         taskContainer.appendChild(taskBoard);
 
         renderTasks(board); // Отображаем задачи
@@ -106,6 +182,8 @@ function moveTabDown(boardId) {
 function openBoard(boardId) {
     const selectedBoard = boards.find(board => board.id === boardId);
     const taskBoards = document.querySelectorAll('.task-board');
+    const tabs = document.querySelectorAll('.tab');
+    
     taskBoards.forEach(board => {
         if (board.id === boardId) {
             board.style.display = selectedBoard.style;
@@ -113,6 +191,18 @@ function openBoard(boardId) {
             board.style.display = 'none';
         }
     });
+
+    tabs.forEach(tab => {
+        tab.classList.remove('active');
+        tab.style.transition = 'background-color 0.5s'; // Animation effect
+    });
+
+    // Show selected board and highlight active tab
+    const activeTab = [...tabs].find(tab => tab.innerText.includes(selectedBoard.name));
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
+
     activeBoardId = boardId;
 }
 
@@ -127,7 +217,7 @@ function addTask() {
 
     // Проверка, что обязательные поля заполнены
     if (!title || !deadline) {
-        alert('Please fill out both title and deadline!');
+        showNotification('Please fill out both title and deadline!');
         return;
     }
 
@@ -135,7 +225,7 @@ function addTask() {
     const isValidImageUrl = imageUrl && (imageUrl.match(/\.(jpeg|jpg|gif|png)$/) !== null);
 
     if (imageUrl && !isValidImageUrl) {
-        alert('Please provide a valid image URL!');
+        showNotification('Please provide a valid image URL!');
         return;
     }
 
@@ -152,7 +242,7 @@ function addTask() {
 
     const board = boards.find(b => b.id === activeBoardId);
     if (!board) {
-        alert('Board not found');
+        showNotification('Board not found, select the board');
         return;
     }
 
@@ -163,6 +253,27 @@ function addTask() {
 
 }
 
+// Инициализация изменения размера карточки
+function initResize(id) {
+    const taskCard = document.getElementById(id);
+
+    window.addEventListener('mousemove', resize);
+    window.addEventListener('mouseup', stopResize);
+
+    function resize(event) {
+        const newWidth = Math.max(event.clientX - taskCard.getBoundingClientRect().left, 100); // минимальная ширина
+        const newHeight = Math.max(event.clientY - taskCard.getBoundingClientRect().top, 50); // минимальная высота
+
+        // Устанавливаем новые размеры карточки
+        taskCard.style.width = newWidth + 'px';
+        taskCard.style.height = newHeight + 'px';
+    }
+
+    function stopResize() {
+        window.removeEventListener('mousemove', resize);
+        window.removeEventListener('mouseup', stopResize);
+    }
+}
 
 // Функция для редактирования задачи
 function editTask(boardId, taskId) {
@@ -197,6 +308,33 @@ function deleteBoard(boardId) {
     saveStateToURL();
 }
 
+function getTaskStage(task) {
+    const now = new Date();
+    const deadline = new Date(task.deadline);
+
+    // Разница в миллисекундах между текущей датой и дедлайном
+    const timeDiff = deadline - now;
+
+    // Определяем стадии на основе разницы во времени
+    if (timeDiff < 0) {
+        // Задача просрочена
+        if (now - deadline >= 30 * 24 * 60 * 60 * 1000) { // Если прошло больше месяца
+            return 'leave-active'; // Прошел месяц или больше
+        } else if (now - deadline >= 7 * 24 * 60 * 60 * 1000) { // Если прошло больше недели
+            return 'leave'; // Прошел день или целая неделя
+        }
+    } else if (timeDiff < 2 * 24 * 60 * 60 * 1000) {
+        // Если дедлайн завтра или послезавтра
+        return 'enter-active'; // Задача на завтра или послезавтра
+    } else if (timeDiff < 7 * 24 * 60 * 60 * 1000) {
+        // Если дедлайн в течение недели
+        return 'normal'; // Обычная задача
+    } else {
+        return 'enter'; // Задача на более длительный срок (больше недели)
+    }
+}
+
+
 function renderTasks(board) {
     const taskBoard = document.getElementById(board.id);
     taskBoard.innerHTML = '';
@@ -211,7 +349,7 @@ function renderTasks(board) {
 
     board.tasks.forEach(task => {
         const taskCard = document.createElement('div');
-        taskCard.classList.add('task-card');
+        taskCard.classList.add('task-card', getTaskStage(task)); // Добавляем класс стадии
         taskCard.innerHTML = `
             <h3 href="#${task.title}">${task.title}</h3>
             <p>${task.description}</p>
@@ -235,6 +373,17 @@ function renderTasks(board) {
             ${task.link ? `<a href="${task.link}" target="_blank">Open Link</a>` : ''}
         `;
         taskBoard.appendChild(taskCard);
+        taskBoard.innerHTML += `<div class="resizer" onmousedown="initResize('${board.id}')">📏size</div>`;
+
+        // Удаление задачи с анимацией
+        taskCard.addEventListener('animationend', () => {
+            if (task.stage === 'leave' || task.stage === 'leave-active') {
+                setTimeout(() => {
+                    taskCard.classList.add('enter-active'); // Применяем класс для анимации
+                }, 500); // Небольшая задержка для срабатывания анимации
+            }
+        });
+
     });
 }
 
@@ -345,7 +494,6 @@ function showNotification(title, body) {
     }
 }
 
-
 function checkTasksForNotifications(state) {
     const now = new Date();
 
@@ -387,11 +535,11 @@ function checkTasksForNotifications(state) {
 
             // Сравниваем только год, месяц и день, игнорируя время
             const isSameDay = now.getMonth() === taskDeadline.getMonth() ||
-                              now.getDate() === taskDeadline.getDate();
+                            now.getDate() === taskDeadline.getDate();
 
             // Проверка на завтрашний день
             const isTomorrow = tomorrow.getMonth() === taskDeadline.getMonth() ||
-                               tomorrow.getDate() === taskDeadline.getDate();
+                            tomorrow.getDate() === taskDeadline.getDate();
 
             // Проверка, если задача в пределах текущей недели
             const isThisWeek = taskDeadline >= startOfWeek && taskDeadline <= endOfWeek;
@@ -521,6 +669,7 @@ function openSettings(boardId) {
     document.getElementById('backgroundColorInput').value = board.backgroundColor;
     document.getElementById('textColorInput').value = board.textColor;
     document.getElementById('styleInput').value = board.style;
+    document.getElementById('textAlignSelector').value = board.text;
 
     const settingsModal = document.getElementById('settingsModal');
     settingsModal.style.display = 'block';
@@ -533,14 +682,16 @@ function applyBoardSettings() {
     const backgroundColor = document.getElementById('backgroundColorInput').value;
     const textColor = document.getElementById('textColorInput').value;
     const style = document.getElementById('styleInput').value;
-
+    const text = document.getElementById('textAlignSelector').value;
+    
     const board = boards.find(b => b.id === activeBoardId);
     if (!board) return;
-
+    
     board.emoji = emoji;
     board.backgroundColor = backgroundColor;
     board.textColor = textColor;
     board.style = style;
+    board.text = text;
 
     renderBoards();
     saveStateToURL();
@@ -562,7 +713,7 @@ function openCommentModal(boardId, taskId) {
             // Проверяем, что URL является изображением
             const isValidImageUrl = imageUrl && (imageUrl.match(/\.(jpeg|jpg|gif|png)$/) !== null);
             if (imageUrl && !isValidImageUrl) {
-                alert('Please provide a valid image URL!');
+                showNotification('Please provide a valid image URL!');
                 return;
             }
 
@@ -599,7 +750,7 @@ function copy() {
     })
     .catch(function(err) {
         // Если произошла ошибка, показываем сообщение
-        alert("Error: " + err);
+        showNotification("Error: " + err);
     });
 
     // Выделяем текст в поле ввода

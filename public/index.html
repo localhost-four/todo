@@ -1,89 +1,151 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
+<head>
+    <!-- Установка кодировки и масштаба -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Мета-теги SEO для обоих языков -->
+    <meta name="description" content="Special add-on for styling the external style of editors that specifically creates a surface window for editing the style of your style.">
+    <title>Code Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="style.css">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/11.0.2/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/11.0.2/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/11.0.2/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/11.0.2/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/11.0.2/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/11.0.2/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/11.0.2/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/11.0.2/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/11.0.2/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/11.0.2/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <link rel="stylesheet" href="styles.css">
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+    <!-- Мета-теги SEO для обоих языков -->
+    <meta name="description" content="TODO List - Code Editor">
+    <meta name="keywords" content="Code editor, add your modification to the client for convenient display, and also create your own unique page in the online code editor.">
+    <meta name="author" content="localhost-four.github.io">
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    <!-- Open Graph для социальных сетей (Facebook, LinkedIn, WhatsApp) -->
+    <meta property="og:title" content="TODO List - Code Editor">
+    <meta property="og:description" content="Code editor, add your modification to the client for convenient display, and also create your own unique page in the online code editor.">
+    <meta property="og:image" content="/todo/1img.gif">
+    <meta property="og:url" content="https://localhost-four.github.io/todo/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TODO List">
+    
+    <!-- Мета-теги для Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="TODO List - Code Editor">
+    <meta name="twitter:description" content="Code editor, add your modification to the client for convenient display, and also create your own unique page in the online code editor..">
+    <meta name="twitter:image" content="/todo/1img.gif">
+    <meta name="twitter:url" content="https://localhost-four.github.io/todo/">
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+    <!-- Robot Follow -->
+    <meta name="robots" content="noindex, follow">
+    <meta name="language" content="en">
+    <meta name="rating" content="General">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Schema.org Structured Data for Better SEO -->
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://localhost-four.github.io/todo/public",
+            "name": "TODO List",
+            "description": "A comprehensive app for task management. Keep your tasks organized and accessible.",
+            "author": {
+                "@type": "Organization",
+                "name": "Your Company Name"
+            }
         }
-      });
     </script>
-  </body>
+    
+    <!-- Защита от XSS с помощью Content Security Policy (CSP) -->
+    <meta http-equiv="Content-Security-Policy" content="
+        img-src 'self' data:; 
+        font-src 'self'; 
+        object-src 'none'; 
+        frame-ancestors 'none'; 
+        base-uri 'self'; 
+        form-action 'self';
+    ">
+    <!-- Защита от кликджекинга -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <!-- Установка заголовка X-Content-Type-Options -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <!-- Установка заголовка Strict-Transport-Security (HSTS) через мета-тег -->
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+    <!-- Защита от кросс-доменных запросов (CORS) -->
+    <meta http-equiv="Access-Control-Allow-Origin" content="self">
+    <!-- Установка заголовка Permissions-Policy для управления доступом к API -->
+    <meta http-equiv="Permissions-Policy" content="geolocation=(self), microphone=(), camera=()">
+    <!-- Защита от реферера -->
+    <meta name="referrer" content="no-referrer">
+
+    <!-- Иконки для мобильных устройств -->
+    <link rel="icon" href="/todo/1img.gif">
+    <link rel="apple-touch-icon" href="/todo/1img.gif">
+    <link rel="icon" sizes="192x192" href="/todo/1img.gif">
+    <link rel="icon" sizes="512x512" href="/todo/1img.gif">
+
+    <!-- Манифест для PWA -->
+    <link rel="manifest" href="/todo/manifest.json">
+    <script src="/todo/manifest.js" defer></script>
+    <script src="/todo/service-worker.js" defer></script>
+    
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .editor {
+            height: 90%;
+            width: 98%;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .tag {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-right: 5px;
+            font-size: 0.9em;
+        }
+        #tags-container {
+            margin-top: 10px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .CodeMirror {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body jstcache="1" contenteditable="true">
+
+<h1>Code Editor </h1>
+<textarea id="code" class="editor"></textarea>
+<button id="save">Save Code</button>
+<button id="load">Load Code</button>
+<button id="save-css">Save CSS</button>
+<div id="tags-container"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+<script src="edit.js"></script>
+
+</body>
 </html>

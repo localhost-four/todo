@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- Установка кодировки и масштаба -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +14,7 @@
     <meta property="og:title" content="TODO List - Task Management App">
     <meta property="og:description" content="Manage your tasks effectively. Share your TODO list offline and with others. Access your tasks anytime, anywhere.">
     <meta property="og:image" content="1img.gif">
-    <meta property="og:url" content="https://localhost-four.github.io/TODO/">
+    <meta property="og:url" content="https://localhost-four.github.io/todo/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="TODO List">
     
@@ -26,7 +23,7 @@
     <meta name="twitter:title" content="TODO List - Task Management App">
     <meta name="twitter:description" content="Manage your tasks effectively. Share your TODO list offline and with others. Access your tasks anytime, anywhere.">
     <meta name="twitter:image" content="1img.gif">
-    <meta name="twitter:url" content="https://localhost-four.github.io/TODO/">
+    <meta name="twitter:url" content="https://localhost-four.github.io/todo/">
     
     <!-- Robot Follow -->
     <meta name="robots" content="noindex, follow">
@@ -39,7 +36,7 @@
         {
             "@context": "http://schema.org",
             "@type": "WebSite",
-            "url": "https://localhost-four.github.io/TODO/",
+            "url": "https://localhost-four.github.io/todo/",
             "name": "TODO List",
             "description": "A comprehensive app for task management. Keep your tasks organized and accessible.",
             "author": {
@@ -48,7 +45,7 @@
             },
             "potentialAction": {
                 "@type": "SearchAction",
-                "target": "https://localhost-four.github.io/TODO/?state={search_term_string}",
+                "target": "https://localhost-four.github.io/todo/?state={search_term_string}",
                 "query-input": "required name=search_term_string"
             }
         }
@@ -57,7 +54,6 @@
     <!-- Защита от XSS с помощью Content Security Policy (CSP) -->
     <meta http-equiv="Content-Security-Policy" content="
         style-src 'self'; 
-        img-src 'self' data:; 
         font-src 'self'; 
         object-src 'none'; 
         frame-ancestors 'none'; 
@@ -86,6 +82,21 @@
     <link rel="manifest" href="manifest.json">
     <link href="%PUBLIC_URL%/manifest.json" rel="manifest" />
 
+    <!-- Yandex.RTB -->
+    <script async src="https://mc.yandex.ru/metrika/tag.js"></script>
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <link rel="preconnect" href="https://yastatic.net">
+    <link rel="preconnect" href="https://avatars.mds.yandex.net">
+    <link rel="preconnect" href="https://mc.yandex.ru">
+    <link rel="preconnect" href="https://ads.adfox.ru">
+
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html"
+            height="0" width="0" style="display:none;visibility:hidden" id="tag-manager">
+        </iframe>
+    </noscript>
+
+    <script async crossorigin="anonymous" src="https://yastatic.net/safeframe-bundles/0.83/host.js"></script>
 
     <!-- Заголовок страницы -->
     <title>TODO List — Task Management App</title>
@@ -101,20 +112,23 @@
     <script src="manifest.js" defer nonce="xyz123"></script>
     <script src="service-worker.js" defer nonce="xyz123"></script>
     <script src="ban.js" defer nonce="xyz123"></script>
+    <script src="coockie.js" defer nonce="xyz123"></script> 
 </head>
-<body allowfullscreen="allowfullscreen">
+<body allowfullscreen="allowfullscreen" jstcache="0" contenteditable="false">
     <div class="app-container">
         <header class="noselect">
+            
             <div class="app-header">
                 <a href="#top" onclick="copy()" nonce="xyz123">TODO</a>
                 <a href="home/">LOOK</a>
                 <div class="tabs-container">
                     <button class="tab" nonce="xyz123" onclick="openNewBoardTab()">DESK</button>
                     <button class="tab" nonce="xyz123" onclick="openAddTaskModal()">TASK</button>
-                    <button class="tab" id="theme-button" onclick="themes()">/set</button>
+                    <button class="tab" id="theme-button" onclick="themes()" ondblclick="custom()">/set</button>
                 </div>
             </div>
         </header>
+
         <div class="tabs-container">
             <div id="tabs" class="noselect"></div>
         </div>
@@ -146,7 +160,6 @@
             </div>
         </div>
 
-
         <!-- Modal for Board Settings -->
         <div class="modal" id="settingsModal">
             <div class="modal-content">
@@ -159,7 +172,7 @@
                 <label>Text Color:</label>
                 <input type="color" id="textColorInput">
                 <label>Style:</label>
-                <select id="styleInput">
+                <select id="styleInput" value="flex">
                     <option value="block">Block</option>
                     <option value="grid">Grid</option>
                     <option value="flex">Flex</option>
@@ -167,6 +180,17 @@
                     <option value="inline">Inline</option>
                     <option value="contents">Contents</option>
                     <option value="flow-root">Flow-root</option>
+                </select>
+                <label>Text-Align:</label>
+                <select id="textAlignSelector" value="left">
+                    <option value="left">Left</option>
+                    <option value="center">Center</option>
+                    <option value="right">Right</option>
+                    <option value="justify">Justify</option>
+                    <option value="end">End</option>
+                    <option value="start">Start</option>
+                    <option value="unset">Unset</option>
+                    <option value="initial">Initial</option>
                 </select>
                 <button onclick="applyBoardSettings()" nonce="xyz123">Apply</button>
                 

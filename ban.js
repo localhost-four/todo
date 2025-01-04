@@ -20,7 +20,6 @@ console.log('Timeout:', data);
 
 console.log('version 2.1v');
 
-
 // COOKIE
 if (navigator.cookieEnabled) {
 null;
@@ -41,31 +40,72 @@ setTimeout(function() {
 }, 150);
 }
 
-
-
-
 // Функция для подключения CSS из URL
 function loadCssFromUrl() {
-    // Получаем текущий URL
-    var url = window.location.href;
+    try {
+        // Извлекаем параметр mod из URL
+        const params = new URLSearchParams(window.location.search);
+        const cssUrl = params.get('mod');
 
-    // Извлекаем параметр mod из URL
-    const params = new URLSearchParams(window.location.search);
-    const cssUrl = params.get('mod');
+        // Создаём мета-тег для Content-Security-Policy
+        const metaCSP = document.createElement("meta");
+        metaCSP.httpEquiv = "Content-Security-Policy";
+        
+        // Формируем значение для CSP с учетом указанных стилей
+        let cspContent = `style-src 'self' 'unsafe-inline' https://fonts.gstatic.com/`;
+        if (cssUrl && cssUrl.length > 0) {
+            cspContent += ` ${cssUrl};`;
+            console.log(`CSS загружен: ${cssUrl}`);
+            
+            // Загружаем CSS с указанного URL
+            fetch(cssUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(cssText => {
+                    // Создаём элемент style и добавляем загруженные стили
+                    const style = document.createElement("style");
+                    style.appendChild(document.createTextNode(cssText));
+                    document.head.appendChild(style);
+                    console.log(`CSS загружен и добавлен: ${cssUrl}`);
+                    
+                })
+                .catch(error => {
+                    console.log(error);
 
-    // Проверяем, есть ли значение для параметра mod
-    if (cssUrl && cssUrl.length > 0) {
-        // Создаем элемент <link> для подключения CSS
-        var link = document.createElement("link");
-        link.rel = "stylesheet"; // Указываем, что это таблица стилей
-        link.href = cssUrl; // Устанавливаем путь к CSS
+                    const link = document.createElement("style");
+                    link.rel = "stylesheet"; // Указываем, что это таблица стилей
+                    link.innerHTML = cssUrl; // Устанавливаем путь к CSS
+                    document.head.appendChild(link);
 
-        // Добавляем элемент <link> в <head>
-        document.head.appendChild(link);
-        console.log(`CSS загружен: ${cssUrl}`);
-    } else {
-        console.warn('Параметр "mod" не найден или пуст.');
+                })
+
+        } else {
+            console.warn('"mod" not found');
+        }
+
+        // Добавляем мета-тег CSP в head
+        metaCSP.content = cspContent;
+        document.head.appendChild(metaCSP);
+    } catch(n) { null; }
+    
+    const allElements = document.querySelectorAll('*'); // Получаем все элементы на странице
+    allElements.forEach(element => {
+        element.setAttribute('aria-hidden', 'false'); // Устанавливаем aria-hidden="false"
+    });
+
+    // Функция, которая изменяет aria-hidden на "true"
+    function Hidden() {
+        const allElements = document.querySelectorAll('*'); // Получаем все элементы на странице
+        allElements.forEach(element => {
+            element.setAttribute('aria-hidden', 'true'); // Устанавливаем aria-hidden="true"
+        });
     }
+    setTimeout(Hidden, 1200);
+
 }
 
 
@@ -157,6 +197,20 @@ var ads = "neterror"
 
 var msg = '<h2><div align=center class="no-adb-1">You are using an AdBlock extension or similar. You can add this site to the whitelist, and thereby contribute to its development.</div></h2>';
 
+document.addEventListener("DOMContentLoaded", function() {
+    const metaUrl = document.createElement('meta');
+    metaUrl.setAttribute('property', 'og:url');
+    metaUrl.setAttribute('content', window.location.href);
+    document.head.appendChild(metaUrl);
+
+    metaUrl.setAttribute('property', 'twitter:url');
+    metaUrl.setAttribute('content', window.location.href);
+    document.head.appendChild(metaUrl);
+
+    metaUrl.setAttribute('property', 'author');
+    metaUrl.setAttribute('content', window.location.href);
+    document.head.appendChild(metaUrl);
+});
 
 onload=function(){
 if (document.getElementsByClassName == undefined) {
@@ -209,7 +263,5 @@ null;
 // (Note: the exact output may be browser-dependent)
 }
 
-
 // Запускаем функцию при загрузке страницы
 window.onload = loadCssFromUrl;
-});

@@ -1,5 +1,15 @@
 // notifications.js
 
+chrome.runtime.onMessage.addListener((request) => {
+    if (request.action === "openPopup") {
+        chrome.windows.create({
+            url: chrome.runtime.getURL("popup.html"),
+            type: "popup"
+        });
+    }
+});
+
+
 // Функция для запроса разрешения на уведомления
 function requestNotificationPermission() {
     if (Notification.permission === "default") {
@@ -72,7 +82,7 @@ function initNotifications() {
 // Интервал для периодической проверки задач (каждые 10 минут)
 setInterval(() => {
     initNotifications();  // Периодическая проверка задач
-}, 60 * 1000);  // Интервал 10 минут
+}, 60 * 1200);  // Интервал 10 минут
 
 // Проверка уведомлений при запуске
 window.onload = () => {

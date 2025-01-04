@@ -8,32 +8,37 @@
 
 
 <url>
-  <loc>https://localhost-four.github.io/TODO/</loc>
+  <loc>https://localhost-four.github.io/todo/</loc>
   <lastmod>2024-12-12T00:54:30+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://localhost-four.github.io/TODO/home/</loc>
+  <loc>https://localhost-four.github.io/todo/home/</loc>
   <lastmod>2024-12-12T00:54:30+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://localhost-four.github.io/TODO/about/</loc>
+  <loc>https://localhost-four.github.io/todo/about/</loc>
   <lastmod>2024-12-12T00:54:30+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://localhost-four.github.io/TODO/static/</loc>
+  <loc>https://localhost-four.github.io/todo/static/</loc>
   <lastmod>2024-12-12T00:54:30+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://localhost-four.github.io/TODO/forum/</loc>
+  <loc>https://localhost-four.github.io/todo/forum/</loc>
   <lastmod>2024-12-12T00:54:30+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://localhost-four.github.io/TODO/public/</loc>
+  <loc>https://localhost-four.github.io/todo/public/</loc>
+  <lastmod>2024-12-12T00:54:30+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://localhost-four.github.io/todo/policy/</loc>
   <lastmod>2024-12-12T00:54:30+00:00</lastmod>
   <priority>0.64</priority>
 </url>

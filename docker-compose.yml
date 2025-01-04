@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "5001:80"  # Проброс порта 80 контейнера на порт 5001 хоста
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./html:/usr/share/nginx/html  # Укажите путь к вашим HTML-файлам
+      - ./html:/var/www/html  # Монтируем локальную папку с вашими файлами
+      - ./nginx.conf:/etc/nginx/sites-available/default
+      - ./apache2.conf:/etc/apache2/apache2.conf
+    #networks:
+      #- my_network
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: google-todo
+      MYSQL_DATABASE: database
+      MYSQL_USER: todo
+      MYSQL_PASSWORD: google-todo
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+
+#networks:
+  #my_network:
+

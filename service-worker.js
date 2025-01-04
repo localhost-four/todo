@@ -1,20 +1,35 @@
 const CACHE_NAME = 'my-site-cache-v2';
 const urlsToCache = [
-  '/TODO/index.html',
-  '/TODO/index.html',
-  '/TODO/styles.css',
-  '/TODO/script.js',
-  '/TODO/1img.gif'
+  'index.html',
+  'styles.css',
+  'script.js',
+  '1img.gif', 
+  '/todo/index.html',
+  '/todo/index.html',
+  '/todo/styles.css',
+  '/todo/script.js',
+  '/todo/1img.gif'
 ];
 
-// Устанавливаем сервис-воркер и кэшируем необходимые файлы
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Кэширование файлов');
-        return cache.addAll(urlsToCache);
-      })
+      caches.open(CACHE_NAME)
+          .then((cache) => {
+              console.log('File Caching');
+              return Promise.all(urlsToCache.map(url => {
+                  return fetch(url).then(response => {
+                      if (!response.ok) {
+                          throw new Error(`Network response was not ok for ${url} (status: ${response.status})`);
+                      }
+                      return cache.put(url, response);
+                  }).catch(error => {
+                      console.error(`Failed to fetch ${url}:`, error);
+                  });
+              }));
+          })
+          .catch(error => {
+              console.error('Error caching:', error);
+          })
   );
 });
 
@@ -44,4 +59,47 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-navigator.serviceWorker.register('service-worker.js')
+// Извлекаем данные из события push
+self.addEventListener('push', function(event) {
+  const data = event.data.json(); 
+
+  const title = data.title || 'Notification';
+  const options = {
+      body: data.body || 'New notice from TODO',
+      icon: '/todo/1img.gif', // Укажите путь к иконке уведомления
+      badge: '/todo/1img.gif' // Укажите путь к значку уведомления (необязательно)
+  };
+
+  event.waitUntil(
+      self.registration.showNotification(title, options)
+  );
+});
+
+// Обработка кликов по уведомлению
+self.addEventListener('notificationclick', event => {
+    event.notification.close(); // Закрываем уведомление
+
+    event.waitUntil(
+      clients.matchAll({ type: 'window' }).then(clients => {
+        // Проверяем, есть ли уже открытое окно приложения
+        const client = clients.find(c => c.url === '/todo/index.html' && 'focus' in c);
+        if (client) {
+            return client.focus(); // Если есть, фокусируемся на нем
+        } else {
+            return clients.openWindow('/todo/index.html'); // Иначе открываем новое окно
+        }
+      })
+    );
+
+});
+
+// Регистрация сервис-воркера
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+      .then((registration) => {
+          console.log('Service Worker open:', registration.scope);
+      })
+      .catch((error) => {
+          console.error('Error Service Worker:', error);
+      });
+}
