@@ -59,7 +59,26 @@ body {
     z-index: 9999;
 }
 
-
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #4caf50; /* Цвет фона */
+    color: white; /* Цвет текста */
+    opacity: 0.9;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 1000;
+}
+.notification.show {
+    opacity: 0.8;
+    transition: background-image 0.5s, background-color 0.5s;
+    animation: fadeIn 0.5s;
+}
 
 #cookie-banner {
     position: fixed;

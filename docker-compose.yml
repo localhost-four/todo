@@ -2,16 +2,30 @@ version: '3.8'
 
 services:
   web:
-    image: nginx:latest
+    image: nginx:latest #ghcr.io/gethomepage/homepage:latest
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+          - NODE_ENV=production
     ports:
       - "5001:80"  # Проброс порта 80 контейнера на порт 5001 хоста
       - "80:80"
       - "443:443"
+      - "3000:3000"
     volumes:
+      - /volume1/@appstore/WebStation/srv/http/index.html
       - ./html:/usr/share/nginx/html  # Укажите путь к вашим HTML-файлам
       - ./html:/var/www/html  # Монтируем локальную папку с вашими файлами
-      - ./nginx.conf:/etc/nginx/sites-available/default
+      - ./nginx.conf:/etc/nginx/nginx.conf
       - ./apache2.conf:/etc/apache2/apache2.conf
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./:/home/node/app
+    expose:
+      - "8081"
+    command: "npm start"
+    #environment:
+      #PUID: $PUID #1028
+      #PGID: $PGID #100
     #networks:
       #- my_network
 

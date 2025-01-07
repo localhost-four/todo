@@ -412,6 +412,14 @@ function saveStateToLocalStorage() {
 
 // notifications.js
 
+// Функция для воспроизведения звука
+function playSound() {
+    const audio = new Audio('my.wav'); // Путь к вашему звуковому файлу
+    audio.play().catch(error => {
+        console.error('Error playing sound:', error);
+    });
+}
+
 // Функция для запроса разрешения на уведомления
 function requestNotificationPermission() {
     if (Notification.permission === "default") {
@@ -424,34 +432,6 @@ function requestNotificationPermission() {
 }
 
 function showNot(message, duration = 3000) {
-    // Создание стилей для уведомления
-    const styles = `
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #4caf50; /* Цвет фона */
-            color: white; /* Цвет текста */
-            opacity: 0.9;
-            padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            transition: opacity 0.5s;
-            z-index: 1000;
-        }
-        .notification.show {
-            opacity: 0.8;
-        }
-    `;
-
-    // Создание элемента style и добавление стилей в документ
-    const styleSheet = document.createElement("style");
-    styleSheet.type = "text/css";
-    styleSheet.innerText = styles;
-    document.head.appendChild(styleSheet);
-
     // Создание элемента уведомления
     const notification = document.createElement('div');
     notification.className = 'notification';
@@ -529,6 +509,7 @@ function checkTasksForNotifications(state) {
             const title = task.title;
             const description = task.description;
             const deadline = task.deadline;  // Дата дедлайна задачи
+            const timdex = task.time;  // Дата дедлайна задачи
             
             // Преобразуем строку дедлайна в объект Date
             const taskDeadline = new Date(deadline);
@@ -592,7 +573,7 @@ function getStateFromURL() {
 function initNotifications() {
     const state = getStateFromURL();
     if (state) {
-        requestNotificationPermission();  // Запросить разрешение на уведомления
+        try { requestNotificationPermission(); } catch(n) { showNotification(`Error while checking views: ${n}`); }  // Запросить разрешение на уведомления
         checkTasksForNotifications(state);  // Проверить задачи на уведомления
     } else {
         showNotification(`Welcome back ${navigator.userAgent.split('(')[1].slice(0, 12)}`, `Glad to see you, workspace is cleaned.`);

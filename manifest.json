@@ -9,6 +9,17 @@
   "background": {
     "service_worker": "notifications.js"
   },
+  "permissions": [
+      "notifications",    // Для отображения уведомлений
+      "cookies",          // Для работы с cookies
+      "system-time",      // Для доступа к системному времени (если используется)
+      "calendar",         // Для интеграции с календарем (если используется)
+      "storage",          // Для доступа к LocalStorage
+      "clipboardRead",    // Для чтения из буфера обмена (если необходимо)
+      "clipboardWrite",   // Для записи в буфер обмена (если необходимо)
+      "fileSystem",       // Для доступа к файловой системе (если используете файловый ввод)
+      "background"        // Для работы в фоновом режиме (если необходимо)
+  ],
   "content_scripts": [
     {
         "matches": ["<all_urls>"],

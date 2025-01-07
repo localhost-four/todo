@@ -1,14 +1,17 @@
+//service-worker.js
 const CACHE_NAME = 'my-site-cache-v2';
 const urlsToCache = [
   'index.html',
   'styles.css',
   'script.js',
+  'notifications.js',
   '1img.gif', 
   '/todo/index.html',
   '/todo/index.html',
   '/todo/styles.css',
   '/todo/script.js',
-  '/todo/1img.gif'
+  '/todo/1img.gif',
+  '/todo/notifications.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -30,16 +33,6 @@ self.addEventListener('install', (event) => {
           .catch(error => {
               console.error('Error caching:', error);
           })
-  );
-});
-
-// Обрабатываем запросы на кэшированные файлы
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      // Возвращаем кэшированный ответ, если он есть, иначе - с сервера
-      return cachedResponse || fetch(event.request);
-    })
   );
 });
 
@@ -103,3 +96,23 @@ if ('serviceWorker' in navigator) {
           console.error('Error Service Worker:', error);
       });
 }
+
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  navigator.serviceWorker.register('/service-worker.js')
+      .then(function(registration) {
+          console.log('Service Worker registered with scope:', registration.scope);
+      })
+      .catch(function(error) {
+          console.error('Service Worker registration failed:', error);
+      });
+}
+
+// Обрабатываем запросы на кэшированные файлы
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      // Возвращаем кэшированный ответ, если он есть, иначе - с сервера
+      return cachedResponse || fetch(event.request);
+    })
+  );
+});
