@@ -4,13 +4,13 @@ import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, delet
 
 // Настройки Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyDMek24rrioHn3kPaOGDCNIgq1CU7ROVsE",
-    authDomain: "todo-4e809.firebaseapp.com",
-    projectId: "todo-4e809",
-    storageBucket: "todo-4e809.firebasestorage.app",
-    messagingSenderId: "166519588590",
-    appId: "1:166519588590:web:cb3f6b4e6cba1749a515ff",
-    measurementId: "G-45P7VYXPCZ"
+	apiKey: process.env.REACT_APP_API_KEY,
+	authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+	projectId: process.env.REACT_APP_PROJECT_ID,
+	storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+	messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+	appId: process.env.REACT_APP_APP_ID,
+    measurementId: process.env.REACT_APP_mean_ID,
 };
 
 // Инициализация Firebase
