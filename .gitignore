@@ -6,6 +6,11 @@ _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
+.env
+join.js
+forum/script.js
+home/script.js
+static/script.js
 
 # Additional Ruby/bundler ignore for when you run: bundle install
 /vendor
