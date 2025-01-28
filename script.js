@@ -283,16 +283,22 @@ function addTask() {
 
 }
 
+
 // Инициализация изменения размера карточки
 function initResize(id) {
     const taskCard = document.getElementById(id);
+    const container = taskCard.parentElement; // Получаем родительский контейнер
 
     window.addEventListener('mousemove', resize);
     window.addEventListener('mouseup', stopResize);
 
     function resize(event) {
-        const newWidth = Math.max(event.clientX - taskCard.getBoundingClientRect().left, 100); // минимальная ширина
-        const newHeight = Math.max(event.clientY - taskCard.getBoundingClientRect().top, 50); // минимальная высота
+        const containerRect = container.getBoundingClientRect();
+        const taskCardRect = taskCard.getBoundingClientRect();
+
+        // Вычисляем новые размеры с учетом минимальных значений и границ контейнера
+        const newWidth = Math.max(Math.min(event.clientX - taskCardRect.left, containerRect.right - taskCardRect.left), 100); // минимальная ширина
+        const newHeight = Math.max(Math.min(event.clientY - taskCardRect.top, containerRect.bottom - taskCardRect.top), 50); // минимальная высота
 
         // Устанавливаем новые размеры карточки
         taskCard.style.width = newWidth + 'px';

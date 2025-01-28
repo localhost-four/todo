@@ -138,80 +138,144 @@
         
         <!-- Modal for Adding Tasks -->
         <div class="modal" id="addTaskModal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()" nonce="xyz123">&times;</span>
-                <h2>Add Task</h2>
-                <input type="text" id="taskTitle" placeholder="Task Title">
-                <input type="date" id="taskDeadline">
-                <script nonce="xyz123">
-                    document.getElementById('taskDeadline').value = new Date().toISOString().split('T')[0];
-                </script>
-                <textarea id="taskDescription" placeholder="Task Description"></textarea>
-                <input type="url" id="taskImageUrl" placeholder="Image URL (Only for Image)">
-                <input type="url" id="taskLink" placeholder="Resource Link (url)">
-                <select id="taskPriority">
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-                <button onclick="addTask()" nonce="xyz123">Add Task</button>
-                <div id="filePreview" class="file-preview"></div>
+            <div class="draggable" id="draggable1" onmousedown="startDrag(event, this)"><br>
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()" nonce="xyz123">&times;</span>
+                    <h2>Add Task</h2>
+                    <input type="text" id="taskTitle" placeholder="Task Title">
+                    <input type="date" id="taskDeadline">
+                    <script nonce="xyz123">
+                        document.getElementById('taskDeadline').value = new Date().toISOString().split('T')[0];
+                    </script>
+                    <textarea id="taskDescription" placeholder="Task Description"></textarea>
+                    <input type="url" id="taskImageUrl" placeholder="Image URL (Only for Image)">
+                    <input type="url" id="taskLink" placeholder="Resource Link (url)">
+                    <select id="taskPriority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <button onclick="addTask()" nonce="xyz123">Add Task</button>
+                    <div id="filePreview" class="file-preview"></div>
+                </div>
             </div>
         </div>
 
         <!-- Modal for Board Settings -->
         <div class="modal" id="settingsModal">
-            <div class="modal-content">
-                <span class="close" onclick="closeSettings()" nonce="xyz123">&times;</span>
-                <h2>Board Settings</h2>
-                <label>Emoji:</label>
-                <input type="text" id="emojiInput">
-                <label>Background Color:</label>
-                <input type="color" id="backgroundColorInput">
-                <label>Text Color:</label>
-                <input type="color" id="textColorInput">
-                <label>Style:</label>
-                <select id="styleInput" value="flex">
-                    <option value="block">Block</option>
-                    <option value="grid">Grid</option>
-                    <option value="flex">Flex</option>
-                    <option value="ruby">Ruby</option>
-                    <option value="inline">Inline</option>
-                    <option value="contents">Contents</option>
-                    <option value="flow-root">Flow-root</option>
-                </select>
-                <label>Text-Align:</label>
-                <select id="textAlignSelector" value="left">
-                    <option value="left">Left</option>
-                    <option value="center">Center</option>
-                    <option value="right">Right</option>
-                    <option value="justify">Justify</option>
-                    <option value="end">End</option>
-                    <option value="start">Start</option>
-                    <option value="unset">Unset</option>
-                    <option value="initial">Initial</option>
-                </select>
-                <button onclick="applyBoardSettings()" nonce="xyz123">Apply</button>
-                
+            <div class="draggable" id="draggable1" onmousedown="startDrag(event, this)"><br>
+                <div class="modal-content">
+                    <span class="close" onclick="closeSettings()" nonce="xyz123">&times;</span>
+                    <h2>Board Settings</h2>
+                    <label>Emoji:</label>
+                    <input type="text" id="emojiInput">
+                    <label>Background Color:</label>
+                    <input type="color" id="backgroundColorInput">
+                    <label>Text Color:</label>
+                    <input type="color" id="textColorInput">
+                    <label>Style:</label>
+                    <select id="styleInput" value="flex">
+                        <option value="block">Block</option>
+                        <option value="grid">Grid</option>
+                        <option value="flex">Flex</option>
+                        <option value="ruby">Ruby</option>
+                        <option value="inline">Inline</option>
+                        <option value="contents">Contents</option>
+                        <option value="flow-root">Flow-root</option>
+                    </select>
+                    <label>Text-Align:</label>
+                    <select id="textAlignSelector" value="left">
+                        <option value="left">Left</option>
+                        <option value="center">Center</option>
+                        <option value="right">Right</option>
+                        <option value="justify">Justify</option>
+                        <option value="end">End</option>
+                        <option value="start">Start</option>
+                        <option value="unset">Unset</option>
+                        <option value="initial">Initial</option>
+                    </select>
+                    <button onclick="applyBoardSettings()" nonce="xyz123">Apply</button>
+                    
+                </div>
             </div>
         </div>
 
         <!-- Modal for adding comment -->
         <div id="commentModal" class="modal">
-            <div class="modal-content">
-                <h2>Add Comment</h2>
-                <textarea id="commentText" placeholder="Enter your comment..."></textarea>
-                
-                <div>
-                    <label for="urlInput">Image URL:</label>
-                    <input type="url" id="urlInput" placeholder="Enter image URL">
+            <div class="draggable" id="draggable1" onmousedown="startDrag(event, this)"><br>
+                <div class="modal-content">
+                    <h2>Add Comment</h2>
+                    <textarea id="commentText" placeholder="Enter your comment..."></textarea>
+                    
+                    <div>
+                        <label for="urlInput">Image URL:</label>
+                        <input type="url" id="urlInput" placeholder="Enter image URL">
+                    </div>
+                    
+                    <button id="saveCommentBtn">Save Comment</button>
+                    <button onclick="closeCommentModal()" nonce="xyz123">Cancel</button>
                 </div>
-                
-                <button id="saveCommentBtn">Save Comment</button>
-                <button onclick="closeCommentModal()" nonce="xyz123">Cancel</button>
             </div>
         </div>
     </div>
+
+    <script>
+        let isDragging = false;
+        let offsetX, offsetY;
+    
+        function startDrag(e, element) {
+            isDragging = true;
+            element.classList.add('dragging');
+    
+            // Запоминаем смещение курсора
+            offsetX = e.clientX - element.getBoundingClientRect().left;
+            offsetY = e.clientY - element.getBoundingClientRect().top;
+    
+            document.addEventListener('mousemove', (event) => drag(event, element));
+            document.addEventListener('mouseup', stopDrag);
+        }
+    
+        function drag(e, element) {
+            if (!isDragging) return;
+    
+            const parent = element.parentElement;
+    
+            // Вычисляем новые координаты
+            const newX = e.clientX - offsetX;
+            const newY = e.clientY - offsetY;
+    
+            // Ограничиваем движение внутри родительского элемента
+            const parentRect = parent.getBoundingClientRect();
+            const elementRect = element.getBoundingClientRect();
+    
+            if (newX < parentRect.left) {
+                element.style.left = '0px';
+            } else if (newX + elementRect.width > parentRect.right) {
+                element.style.left = `${parentRect.width - elementRect.width}px`;
+            } else {
+                element.style.left = `${newX - parentRect.left}px`;
+            }
+    
+            if (newY < parentRect.top) {
+                element.style.top = '0px';
+            } else if (newY + elementRect.height > parentRect.bottom) {
+                element.style.top = `${parentRect.height - elementRect.height}px`;
+            } else {
+                element.style.top = `${newY - parentRect.top}px`;
+            }
+        }
+    
+        function stopDrag() {
+            isDragging = false;
+            const element = document.querySelector('.draggable.dragging');
+            element.classList.remove('dragging');
+    
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('mouseup', stopDrag);
+        }
+    
+    </script>
+    
 
 </body>
 </html>
