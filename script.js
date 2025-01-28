@@ -142,13 +142,38 @@ function renderBoards() {
     tabsContainer.innerHTML = '';
     taskContainer.innerHTML = '';
 
+    if (boards.length === 0) {
+        addBoard(); // Если нет досок, создаем основную
+    }
+
     boards.forEach(board => {
         const tabButton = document.createElement('button');
         tabButton.classList.add('tab');
+        tabButton.setAttribute('draggable', true);
         tabButton.innerHTML = `        
         <span>${board.emoji} ${board.name}</span>
         <span class="arrow" onclick="openSettings('${board.id}')">/s</span>
         <span class="arrow" onclick="moveTabDown('${board.id}')">m></span>`;
+
+        tabButton.ondragstart = (event) => event.dataTransfer.setData('text/plain',  JSON.stringify(board) );
+        tabButton.ondrop = (event) => {
+            event.preventDefault();
+            const draggedBoardId = event.dataTransfer.getData('text/plain');
+            moveTab(draggedBoardId, board.id);
+        };
+
+        // Обработчик события перетаскивания для досок
+        tabButton.addEventListener('dragstart', (event) => {
+            event.dataTransfer.setData('text/plain', JSON.stringify(board) );
+        });
+
+        tabButton.addEventListener('click', () => {
+            currentBoardId = board.id;
+            renderTasks(board);
+        });
+
+        tabButton.ondragover = (event) => event.preventDefault(); // Позволяем сброс
+
         tabButton.onclick = () => openBoard(board.id);
         tabButton.ondblclick = () => openSettings(board.id);
         tabsContainer.appendChild(tabButton);
@@ -158,9 +183,14 @@ function renderBoards() {
         taskBoard.classList.add('task-board');
         taskBoard.style.backgroundColor = board.backgroundColor;
         taskBoard.style.color = board.textColor;
-        taskBoard.style.display = 'none';
+        
         taskBoard.style.display = board.style;
         taskBoard.style.textAlign = board.text;
+
+        taskBoard.setAttribute('ondrop', (event) => dropTask(event, board.id));
+        taskBoard.setAttribute('ondragover', (event) => event.preventDefault()); // Позволяем сброс
+        taskBoard.addEventListener('dragstart', (event) => { event.dataTransfer.setData('text/plain', JSON.stringify(board) ); });
+
         taskContainer.appendChild(taskBoard);
 
         renderTasks(board); // Отображаем задачи
@@ -291,6 +321,21 @@ function editTask(boardId, taskId) {
     }
 }
 
+// Функция для обработки сброса задачи
+function dropTask(event, boardId) {
+    event.preventDefault();
+    const taskId = event.dataTransfer.getData('text/plain');
+    const board = boards.find(b => b.id === boardId);
+    const taskIndex = board.tasks.findIndex(task => task.id === taskId);
+
+    if (taskIndex !== -1) {
+        const task = board.tasks.splice(taskIndex, 1)[0]; // Удаляем задачу из старого места
+        board.tasks.push(task); // Добавляем задачу в конец списка
+        renderTasks(board); // Обновляем отображение задач
+        saveStateToURL();
+    }
+}
+
 // Функция для удаления задачи
 function deleteTask(boardId, taskId) {
     const board = boards.find(b => b.id === boardId);
@@ -349,19 +394,22 @@ function renderTasks(board) {
 
     board.tasks.forEach(task => {
         const taskCard = document.createElement('div');
+        taskCard.setAttribute('draggable', true);
         taskCard.classList.add('task-card', getTaskStage(task)); // Добавляем класс стадии
         taskCard.innerHTML = `
-            <h3 href="#${task.title}">${task.title}</h3>
-            <p>${task.description}</p>
-            <p>Deadline: ${task.deadline}</p>
-            <p>Priority: ${task.priority}</p>
+            <h3 contenteditable="true" onblur="updateTaskTitle('${board.id}', '${task.id}', this.innerText)" href="#${task.title}">${task.title}</h3>
+            <p contenteditable="true" onblur="updateTaskDescription('${board.id}', '${task.id}', this.innerText)" >${task.description}</p>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <p>Priority: ${task.priority}</p>
+                <p><input type="date" value="${task.deadline}" onchange="updateTaskDeadline('${board.id}', '${task.id}', this.value)"></p>
+            </div>
             <button onclick="openCommentModal('${board.id}', '${task.id}')">💬Add</button>
             <button onclick="editTask('${board.id}', '${task.id}')">🔁Rep</button>
             <button onclick="deleteTask('${board.id}', '${task.id}')">🗑Del</button>
             <button onclick="deleteBoard('${board.id}')">✖All</button>
             <div class="comments">
                 ${task.comments.map(comment => {
-                    let commentHtml = `<p>${comment.text || ''}</p>`;
+                    let commentHtml = `<p contenteditable="true" onblur="updateTaskDescription('${board.id}', '${task.id}', this.innerText)">${comment.text || ''}</p>`;
                     if (comment.imageUrl) {
                         // Если есть картинка по URL
                         commentHtml += `<img src="${comment.imageUrl}" alt="Image" class="file-preview" />`;
@@ -373,7 +421,27 @@ function renderTasks(board) {
             ${task.link ? `<a href="${task.link}" target="_blank">Open Link</a>` : ''}
         `;
         taskBoard.appendChild(taskCard);
-        taskBoard.innerHTML += `<div class="resizer" onmousedown="initResize('${board.id}')">📏size</div>`;
+        taskBoard.innerHTML += `<div draggable="false" class="resizer" onmousedown="initResize('${board.id}')">📏size</div>`;
+
+        // Обработчик события перетаскивания для задач
+        taskCard.addEventListener('dragstart', (event) => {
+            event.dataTransfer.setData('text/plain',  JSON.stringify(task) );
+        });
+
+        taskCard.addEventListener('dragover', (event) => {
+            event.preventDefault();
+        });
+
+
+        taskCard.addEventListener('drop', (event) => {
+            const taskId = event.dataTransfer.getData('text/plain');
+            const taskIndex = board.tasks.findIndex(t => t.id === taskId);
+            if (taskIndex > -1) {
+                const [movedTask] = board.tasks.splice(taskIndex, 1);
+                board.tasks.push(movedTask);
+                renderTasks(board, boardDiv);
+            }
+        });
 
         // Удаление задачи с анимацией
         taskCard.addEventListener('animationend', () => {
@@ -387,7 +455,29 @@ function renderTasks(board) {
     });
 }
 
+// Обновление названия задачи
+function updateTaskTitle(boardId, taskId, newTitle) {
+    const board = boards.find(b => b.id === boardId);
+    const task = board.tasks.find(t => t.id === taskId);
+    task.title = newTitle;
+    saveStateToURL();
+}
 
+// Обновление описания задачи
+function updateTaskDescription(boardId, taskId, newDescription) {
+    const board = boards.find(b => b.id === boardId);
+    const task = board.tasks.find(t => t.id === taskId);
+    task.description = newDescription;
+    saveStateToURL();
+}
+
+// Обновление срока выполнения задачи
+function updateTaskDeadline(boardId, taskId, newDeadline) {
+    const board = boards.find(b => b.id === boardId);
+    const task = board.tasks.find(t => t.id === taskId);
+    task.deadline = newDeadline;
+    saveStateToURL();
+}
 
 // Функция для предпросмотра файла
 function renderFilePreview(file) {
@@ -734,12 +824,26 @@ function copy() {
         showNotification("Error: " + err);
     });
 
-    // Выделяем текст в поле ввода
-    window.location.href.select();
-    window.location.href.setSelectionRange(0, 99999); // Для мобильных устройств
+    if (navigator.share) {
+        navigator.share({
+            title: "TODO List - Task Management App",
+            text: "Manage your tasks effectively. Share your TODO list offline and with others. Access your tasks anytime, anywhere.",
+            url: window.location.href
+        })
+        .then(() => showNotification('Task shared successfully!'))
+        .catch((error) => showNotification('Error sharing task:', error));
+    } else {
+        showNotification('Your browser does not support sharing.');
+    }
 
-    // Копируем текст в буфер обмена
-    document.execCommand('copy');
+    // Выделяем текст в поле ввода
+    try {
+        window.location.href.select();
+        window.location.href.setSelectionRange(0, 99999); // Для мобильных устройств
+
+        // Копируем текст в буфер обмена
+        document.execCommand('copy');
+    } catch(n) { null; }
 }
 
 // Загрузка состояния из URL при старте
