@@ -13,13 +13,13 @@ const firebaseConfig = {
 	appId: process.env.REACT_APP_APP_ID,
         measurementId: process.env.REACT_APP_mean_ID
 	*/
-	apiKey: window.env.REACT_APP_API_KEY,
-	authDomain: window.env.REACT_APP_AUTH_DOMAIN,
-	projectId: window.env.REACT_APP_PROJECT_ID,
-	storageBucket: window.env.REACT_APP_STORAGE_BUCKET,
-	messagingSenderId: window.env.REACT_APP_MESSAGING_SENDER_ID,
-	appId: window.env.REACT_APP_APP_ID,
-	measurementId: window.env.REACT_APP_MEASUREMENT_ID
+	REACT_APP_API_KEY: "${{ secrets.REACT_APP_API_KEY }}",
+	REACT_APP_AUTH_DOMAIN: "${{ secrets.REACT_APP_AUTH_DOMAIN }}",
+	REACT_APP_PROJECT_ID: "${{ secrets.REACT_APP_PROJECT_ID }}",
+	REACT_APP_STORAGE_BUCKET: "${{ secrets.REACT_APP_STORAGE_BUCKET }}",
+	REACT_APP_MESSAGING_SENDER_ID: "${{ secrets.REACT_APP_MESSAGING_SENDER_ID }}",
+	REACT_APP_APP_ID: "${{ secrets.REACT_APP_APP_ID }}",
+	REACT_APP_MEASUREMENT_ID: "${{ secrets.REACT_APP_MEASUREMENT_ID }}"
 };
 
 // Инициализация Firebase
