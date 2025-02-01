@@ -4,7 +4,14 @@ import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, delet
 
 // Настройки Firebase
 const firebaseConfig = {
-	
+	apiKey: window.REACT_APP_API_KEY,
+	authDomain: window.REACT_APP_AUTH_DOMAIN,
+	projectId: window.REACT_APP_PROJECT_ID,
+	storageBucket: window.REACT_APP_STORAGE_BUCKET,
+	messagingSenderId: window.REACT_APP_MESSAGING_SENDER_ID,
+	appId: window.REACT_APP_APP_ID,
+	measurementId: window.REACT_APP_MEASUREMENT_ID
+	/*
 	apiKey: process.env.REACT_APP_API_KEY,
 	authDomain: process.env.REACT_APP_AUTH_DOMAIN,
 	projectId: process.env.REACT_APP_PROJECT_ID,
@@ -12,7 +19,7 @@ const firebaseConfig = {
 	messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
 	appId: process.env.REACT_APP_APP_ID,
         measurementId: process.env.REACT_APP_mean_ID
-	/*
+	
 	apiKey: secrets.REACT_APP_API_KEY,
 	authDomain: secrets.REACT_APP_AUTH_DOMAIN,
 	projectId: secrets.REACT_APP_PROJECT_ID,
