@@ -3,13 +3,23 @@ import { getFirestore, collection, getDocs, query, orderBy, where, Timestamp } f
 
 // Firebase setup
 const firebaseConfig = {
-	apiKey: env.REACT_APP_API_KEY,
-	authDomain: env.REACT_APP_AUTH_DOMAIN,
-	projectId: env.REACT_APP_PROJECT_ID,
-	storageBucket: env.REACT_APP_STORAGE_BUCKET,
-	messagingSenderId: env.REACT_APP_MESSAGING_SENDER_ID,
-	appId: env.REACT_APP_APP_ID,
-	measurementId: env.REACT_APP_MEASUREMENT_ID
+    // Your Firebase config here
+	/*
+	apiKey: secrets.REACT_APP_API_KEY,
+	authDomain: secrets.REACT_APP_AUTH_DOMAIN,
+	projectId: secrets.REACT_APP_PROJECT_ID,
+	storageBucket: secrets.REACT_APP_STORAGE_BUCKET,
+	messagingSenderId: secrets.REACT_APP_MESSAGING_SENDER_ID,
+	appId: secrets.REACT_APP_APP_ID,
+	measurementId: secrets.REACT_APP_MEASUREMENT_ID
+	*/
+    apiKey: window.REACT_APP_API_KEY,
+    authDomain: window.REACT_APP_AUTH_DOMAIN,
+    projectId: window.REACT_APP_PROJECT_ID,
+    storageBucket: window.REACT_APP_STORAGE_BUCKET,
+    messagingSenderId: window.REACT_APP_MESSAGING_SENDER_ID,
+    appId: window.REACT_APP_APP_ID,
+    measurementId: window.REACT_APP_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
