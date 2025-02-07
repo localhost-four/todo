@@ -57,13 +57,13 @@ function isValidUrl(url) {
     }
 
     // Проверка, что URL начинается с правильного адреса
-    if (!url.startsWith("https://localhost-four.github.io/TODO/")) {
+    if (!url.startsWith("https://localhost-four.github.io/todo/")) {
         console.log('include 2');
         return false;
     }
 
     // Проверка, что URL содержит дополнительные данные после домена (например, параметры)
-    if (url === "https://localhost-four.github.io/TODO/") {
+    if (url === "https://localhost-four.github.io/todo/") {
         console.log('include 3');
         return false;
     }
