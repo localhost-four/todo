@@ -67,9 +67,11 @@
     <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
     <!-- Защита от кросс-доменных запросов (CORS) -->
     <meta http-equiv="Access-Control-Allow-Origin" content="self">
-    <!-- Установка заголовка Permissions-Policy для управления доступом к API -->
-    <meta http-equiv="Permissions-Policy" content="geolocation=(self), microphone=(), camera=()">
+    <!-- Установка заголовка Permissions-Policy для управления разрешениями -->
+    <meta http-equiv="Permissions-Policy" content="web-share=(), midi=(), gyroscope=(), fullscreen=(), document-domain=(), notifications=(self), popups=(self)">
+
     <meta name="referrer" content="no-referrer">
+    <meta name="HandheldFriendly" content="True">
 
     <!-- Иконки для мобильных устройств -->
     <link rel="icon" href="1img.gif">
@@ -82,13 +84,13 @@
     <link href="%PUBLIC_URL%/manifest.json" rel="manifest" />
 
     <!-- Yandex.RTB -->
-    <script async src="https://mc.yandex.ru/metrika/tag.js"></script>
+    <script async defer src="https://mc.yandex.ru/metrika/tag.js"></script>
     <script>window.yaContextCb=window.yaContextCb||[]</script>
     <link rel="preconnect" href="https://yastatic.net">
     <link rel="preconnect" href="https://avatars.mds.yandex.net">
     <link rel="preconnect" href="https://mc.yandex.ru">
     <link rel="preconnect" href="https://ads.adfox.ru">
-
+    
     <noscript>
         <iframe src="https://www.googletagmanager.com/ns.html"
             height="0" width="0" style="display:none;visibility:hidden" id="tag-manager">
@@ -96,30 +98,30 @@
     </noscript>
 
     <script async crossorigin="anonymous" src="https://yastatic.net/safeframe-bundles/0.83/host.js"></script>
+    <script async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.1/gsap.min.js"></script>
 
     <!-- Заголовок страницы -->
     <title>TODO List — Task Management App</title>
 
     <!-- Firebase SDK -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://127.0.0.1:3000;"> -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://127.0.0.1:3000; 'nonce-xyz123';"> -->
     <!-- Подключаем Firebase SDK для модулей -->
     <script type="module" src="join.js" defer></script>
 
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer nonce="xyz123"></script>
-    <script src="manifest.js" defer nonce="xyz123"></script>
-    <script src="service-worker.js" defer nonce="xyz123"></script>
-    <script src="ban.js" defer nonce="xyz123"></script>
-    <script src="coockie.js" defer nonce="xyz123"></script> 
+    <link rel="stylesheet" href="styles.css" loading="lazy">
+    <script src="script.js" defer nonce="xyz123" loading="lazy"></script>
+    <script src="manifest.js" defer nonce="xyz123" loading="lazy"></script>
+    <script src="service-worker.js" defer nonce="xyz123" loading="lazy"></script>
+    <script src="ban.js" defer nonce="xyz123" loading="lazy"></script>
+    <script src="mods.js" defer nonce="xyz123" loading="lazy"></script> <!-- mods scroll -->
+    <script src="coockie.js" defer nonce="xyz123" loading="lazy"></script> 
 </head>
-<body allowfullscreen="allowfullscreen" jstcache="0" contenteditable="false">
+<body allowfullscreen="allowfullscreen" jstcache="0" contenteditable="false" >
     <div class="app-container">
         <header class="noselect">
             
             <div class="app-header">
-                <a href="#top" onclick="copy()" nonce="xyz123">TODO</a>
-                <a href="home/">LOOK</a>
+                <a href="#top" onclick="copy()" nonce="xyz123">📥</a>
+                <a href="home/">📤</a>
                 <div class="tabs-container">
                     <button class="tab" nonce="xyz123" onclick="openNewBoardTab()">DESK</button>
                     <button class="tab" nonce="xyz123" onclick="openAddTaskModal()">TASK</button>
@@ -220,6 +222,46 @@
     </div>
 
     <script>
+
+        // Перетаскивание
+        const dragItems = document.querySelectorAll('.draggable');
+        let draggedElement = null;
+
+        dragItems.forEach(item => {
+            item.addEventListener('dragstart', function (e) {
+                draggedElement = e.target;
+                draggedElement.style.transform = 'scale(1.1)';
+                draggedElement.style.zIndex = 1000;
+            });
+
+            item.addEventListener('dragend', function () {
+                draggedElement.style.transform = 'scale(1)';
+                draggedElement.style.zIndex = 10;
+            });
+
+            item.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                const dropArea = e.target.closest('.drag-drop-area');
+                if (dropArea) {
+                    dropArea.style.borderColor = '#2980b9';
+                }
+            });
+
+            item.addEventListener('dragleave', function (e) {
+                e.target.closest('.drag-drop-area').style.borderColor = '#3498db';
+            });
+
+            item.addEventListener('drop', function (e) {
+                e.preventDefault();
+                const dropArea = e.target.closest('.drag-drop-area');
+                if (dropArea && draggedElement) {
+                    dropArea.appendChild(draggedElement);
+                    draggedElement.style.transform = 'scale(1)';
+                }
+                dropArea.style.borderColor = '#3498db';
+            });
+        });
+
         let isDragging = false;
         let offsetX, offsetY;
     

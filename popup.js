@@ -43,7 +43,8 @@ setLanguage(lang);
 if (!link) {
     const urlParams = new URLSearchParams(window.location.search);
     link = urlParams.get('l');
-}
+    if (null == link) { link = './'; } 
+} 
 
 document.getElementById('openNewTab').addEventListener('click', () => {
     window.open(link, '_blank');

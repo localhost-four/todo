@@ -114,6 +114,18 @@ function closeSettings() {
     modal.style.display = 'none'; // Закрываем модальное окно
 }
 
+
+
+// ------------------------------------------------------------------------------
+
+function scrollTabs(scrollAmount) {
+    const tabsContainer = document.getElementById('tabs');
+    tabsContainer.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
 // Функция для добавления новой доски
 function addBoard() {
     const getRandomEmoji = () => ['📝', '📅','💾','📁','📃','📄','📒','📓','📚','📙','📑','📰','📂','📋', '🔖', '🗂️', '🖊️'][Math.floor(Math.random() * 7)];
@@ -418,12 +430,12 @@ function renderTasks(board) {
                     let commentHtml = `<p contenteditable="true" onblur="updateTaskDescription('${board.id}', '${task.id}', this.innerText)">${comment.text || ''}</p>`;
                     if (comment.imageUrl) {
                         // Если есть картинка по URL
-                        commentHtml += `<img src="${comment.imageUrl}" alt="Image" class="file-preview" />`;
+                        commentHtml += `<img src="${comment.imageUrl}" alt="Image" loading="lazy" class="file-preview" />`;
                     }
                     return commentHtml;
                 }).join('')}
             </div>
-            ${task.imageUrl ? `<img src="${task.imageUrl}" alt="Image" class="file-preview" />` : ''}
+            ${task.imageUrl ? `<img src="${task.imageUrl}" alt="Image" loading="lazy" class="file-preview" />` : ''}
             ${task.link ? `<a href="${task.link}" target="_blank">Open Link</a>` : ''}
         `;
         taskBoard.appendChild(taskCard);
@@ -488,7 +500,7 @@ function updateTaskDeadline(boardId, taskId, newDeadline) {
 // Функция для предпросмотра файла
 function renderFilePreview(file) {
     if (file && file.type && file.type.startsWith('image')) {
-        return `<img src="${URL.createObjectURL(file)}" alt="Image Preview" class="file-preview" />`;
+        return `<img src="${URL.createObjectURL(file)}" alt="Image Preview" loading="lazy" class="file-preview" />`;
     }
     if (file && file.type === 'image/svg+xml') {
         return `<object data="${URL.createObjectURL(file)}" type="image/svg+xml" class="file-preview"></object>`;
