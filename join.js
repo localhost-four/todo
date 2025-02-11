@@ -154,8 +154,8 @@ async function createEdit() {
     editableField.contentEditable = true;
     editableField.innerText = title; // Устанавливаем title в поле
     editableField.style.position = 'absolute';
-    editableField.style.top = '1px';
-    editableField.style.left = '1px';
+    editableField.style.top = '2px';
+    editableField.style.left = '2px';
     editableField.style.zIndex = '1000';
     editableField.style.padding = '1px';  // Уменьшаем отступы
     editableField.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
