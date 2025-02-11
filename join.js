@@ -5,13 +5,13 @@ import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, delet
 
 // Настройки Firebase
 const firebaseConfig = {
-	apiKey: process.env.REACT_APP_API_KEY || secrets.REACT_APP_API_KEY || env.REACT_APP_MEASUREMENT_ID || window.REACT_APP_API_KEY,
-	authDomain: process.env.REACT_APP_AUTH_DOMAIN || secrets.REACT_APP_AUTH_DOMAIN || env.REACT_APP_MEASUREMENT_ID || window.REACT_APP_AUTH_DOMAIN,
-	projectId: process.env.REACT_APP_PROJECT_ID || secrets.REACT_APP_PROJECT_ID || env.REACT_APP_MEASUREMENT_ID || window.REACT_APP_PROJECT_ID,
-	storageBucket: process.env.REACT_APP_STORAGE_BUCKET || secrets.REACT_APP_STORAGE_BUCKET || env.REACT_APP_MEASUREMENT_ID || window.REACT_APP_STORAGE_BUCKET,
-	messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID || secrets.REACT_APP_MESSAGING_SENDER_ID || env.REACT_APP_MEASUREMENT_ID || window.REACT_APP_MESSAGING_SENDER_ID,
-	appId: process.env.REACT_APP_APP_ID || secrets.REACT_APP_APP_ID || env.REACT_APP_MEASUREMENT_ID || window.REACT_APP_APP_ID,
-	measurementId: process.env.REACT_APP_mean_ID || secrets.REACT_APP_MEASUREMENT_ID || env.REACT_APP_MEASUREMENT_ID || window.REACT_APP_MEASUREMENT_ID
+	apiKey: window.REACT_APP_API_KEY,
+	authDomain: window.REACT_APP_AUTH_DOMAIN,
+	projectId: window.REACT_APP_PROJECT_ID,
+	storageBucket: window.REACT_APP_STORAGE_BUCKET,
+	messagingSenderId: window.REACT_APP_MESSAGING_SENDER_ID,
+	appId: window.REACT_APP_APP_ID,
+	measurementId: window.REACT_APP_MEASUREMENT_ID
 };
 
 // Инициализация Firebase
@@ -97,7 +97,8 @@ async function sendUrlToFirestore() {
             // Если схожих URL нет, добавляем текущий URL в базу данных
             await addDoc(collection(db, "urls"), {
                 url: currentUrl,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+		title: document.referrer && document.referrer.length > 0 ? document.referrer : document.title
             });
             console.log("URL - added to database.");
         } else {
@@ -135,6 +136,90 @@ async function clearDatabase() {
     }
 }
 
+
+
+
+// Функция для создания поля редактирования названия рабочего места
+async function createEdit() {
+    let title = await getTitle( currentUrl ); // Получаем title из базы данных по текущему URL
+
+    // Если title не найдено в базе данных, используем title страницы по умолчанию
+    if (!title) {
+        title = document.title;
+    }
+
+    const editableField = document.createElement('p');
+    
+    // Настройка поля
+    editableField.contentEditable = true;
+    editableField.innerText = title; // Устанавливаем title в поле
+    editableField.style.position = 'absolute';
+    editableField.style.top = '10px';
+    editableField.style.left = '10px';
+    editableField.style.zIndex = '1000';
+    editableField.style.padding = '10px';
+    editableField.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+    editableField.style.border = '1px solid #ccc';
+    editableField.style.borderRadius = '5px';
+    
+    // Добавляем поле на страницу
+    document.body.appendChild(editableField);
+
+    // Обработчик события для сохранения изменений
+    editableField.addEventListener('blur', function () {
+        updateTask(title, editableField.innerText); // Отправляем обновленное значение в базу данных
+    });
+}
+
+
+// Функция для получения title из базы данных по текущему URL
+async function getTitle(url) {
+    try {
+        const querySnapshot = await getDocs(collection(db, "urls"));
+        let titleFromDb = null;
+
+        // Перебираем все документы и ищем запись по текущему URL
+        querySnapshot.forEach(docSnapshot => {
+            const data = docSnapshot.data();
+            if (data.url === url && data.title) {
+                titleFromDb = data.title; // Если найдено совпадение по URL, сохраняем title
+            }
+        });
+
+        return titleFromDb;
+    } catch (error) {
+        console.error("Error fetching title by URL from database:", error);
+        return null; // Если не удалось получить title, возвращаем null
+    }
+}
+
+
+// Функция для обновления данных в базе данных
+async function updateTask(oldTitle, newTitle) {
+    try {
+        const querySnapshot = await getDocs(collection(db, "urls"));
+        querySnapshot.forEach(async (docSnapshot) => {
+            // Ищем документ, где URL соответствует текущему URL
+            if (docSnapshot.data().url === currentUrl) {
+                // Обновляем title в базе данных
+                await updateDoc(doc(db, "urls", docSnapshot.id), {
+                    title: newTitle
+                });
+                console.log('Task description updated in the database.');
+            }
+        });
+    } catch (error) {
+        console.error("Error updating task description:", error);
+    }
+}
+
+// Запускаем функцию для создания поля редактирования при загрузке страницы
+window.addEventListener('load', function () {
+    createEditableTitleField();
+});
+
+
+
 window.addEventListener('beforeunload', function (event) {
     event.preventDefault();
     event.returnValue = ''; // Стандартное сообщение не отображается в современных браузерах
@@ -144,4 +229,8 @@ if (window.location.href === document.referrer) {
     window.location.href = '404.html';
 }
 // Отправляем текущую ссылку в базу данных
-sendUrlToFirestore();
+window.addEventListener('load', function () { 
+	createEdit();
+});
+
+sendUrlToFirestore(); 
