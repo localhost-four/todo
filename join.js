@@ -154,16 +154,13 @@ async function createEdit() {
     editableField.contentEditable = true;
     editableField.innerText = title; // Устанавливаем title в поле
     editableField.style.position = 'absolute';
-    editableField.style.top = '2px';
-    editableField.style.left = '10px';
+    editableField.style.top = '1px';
+    editableField.style.left = '1px';
     editableField.style.zIndex = '1000';
-    editableField.style.padding = '5px';  // Уменьшаем отступы
-    editableField.style.fontSize = '14px';  // Меньше размер шрифта
+    editableField.style.padding = '1px';  // Уменьшаем отступы
     editableField.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
     editableField.style.border = '1px solid #ccc';  // Тонкая граница
     editableField.style.borderRadius = '3px';  // Более округлый угол
-    editableField.style.minWidth = '200px';  // Устанавливаем минимальную ширину
-    editableField.style.maxWidth = '300px';  // Ограничиваем максимальную ширину
     editableField.style.whiteSpace = 'nowrap'; // Убираем перенос строк
     
     // Добавляем поле на страницу
