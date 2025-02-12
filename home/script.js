@@ -101,27 +101,29 @@ async function loadAllDataFromFirestore() {
 // Обновление статистики (Всего ссылок и Ссылок за сегодня)
 async function updateStats() {
   const today = new Date();
-  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()); // Начало дня
-  const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1); // Конец дня
+
+  // Начало и конец текущего месяца
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // Начало месяца
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1); // Конец месяца
 
   // Запрос для получения всех ссылок
   const allLinksQuery = query(collection(db, 'urls'));
   const allLinksSnapshot = await getDocs(allLinksQuery);
   const totalLinksCount = allLinksSnapshot.size;  // Общее количество ссылок
 
-  // Запрос для получения ссылок за сегодня
-  const todayLinksQuery = query(
+  // Запрос для получения ссылок за текущий месяц (отображается как "за один день")
+  const monthLinksQuery = query(
     collection(db, 'urls'),
-    where('timestamp', '>=', Timestamp.fromDate(startOfDay)),
-    where('timestamp', '<', Timestamp.fromDate(endOfDay))
+    where('timestamp', '>=', Timestamp.fromDate(startOfMonth)),
+    where('timestamp', '<', Timestamp.fromDate(endOfMonth))
   );
 
-  const todayLinksSnapshot = await getDocs(todayLinksQuery);
-  const todayLinksCount = todayLinksSnapshot.size;  // Количество ссылок за сегодня
+  const monthLinksSnapshot = await getDocs(monthLinksQuery);
+  const monthLinksCount = monthLinksSnapshot.size;  // Количество ссылок за текущий месяц
 
   // Обновляем статистику на странице
   totalLinksSpan.textContent = totalLinksCount;  // Общее количество ссылок
-  linksTodaySpan.textContent = todayLinksCount;  // Количество ссылок за сегодня
+  linksTodaySpan.textContent = monthLinksCount;  // Количество ссылок за текущий месяц (отображается как за один день)
 }
 
 
