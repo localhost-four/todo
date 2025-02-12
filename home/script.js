@@ -21,7 +21,7 @@ const firebaseConfig = {
     appId: window.REACT_APP_APP_ID,
     measurementId: window.REACT_APP_MEASUREMENT_ID
 };
-
+console.log('v0.2');
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
