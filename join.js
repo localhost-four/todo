@@ -214,13 +214,6 @@ async function updateTask(oldTitle, newTitle) {
     }
 }
 
-// Запускаем функцию для создания поля редактирования при загрузке страницы
-window.addEventListener('load', function () {
-    createEditableTitleField();
-});
-
-
-
 window.addEventListener('beforeunload', function (event) {
     event.preventDefault();
     event.returnValue = ''; // Стандартное сообщение не отображается в современных браузерах
