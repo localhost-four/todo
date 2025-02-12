@@ -374,7 +374,7 @@ section {
 }
 
 .modal-content {
-    padding: 2px;
+    padding: 10px; /* Уменьшаем отступы */
     border-radius: 5px;
     position: relative;
 }
@@ -547,7 +547,7 @@ section {
 
 .modal-content {
     background-color: white;
-    padding: 2px;
+    padding: 10px; /* Уменьшаем отступы */
     border-radius: 10px;
     width: 450px;
     text-align: center;
@@ -707,7 +707,7 @@ input, textarea, select {
     transition: transform 0.2s ease, background-color 0.2s ease;
     position: absolute;
     background: linear-gradient(80deg, #ffffff, #f0f0f0);
-    padding: 2px;
+    padding: 10px; /* Уменьшаем отступы */
     border: 1px solid #aaa;
     border-radius: 5px;
     max-width: 400px;  /* Максимальная ширина, чтобы элемент не растягивался на больших экранах */
@@ -800,7 +800,7 @@ input, textarea, select {
 
     .draggable {
         width: 80%; /* Уменьшаем ширину draggable на мобильных устройствах */
-        padding: 2px;
+        padding: 10px; /* Уменьшаем отступы */
         top: 50%; /* Располагаем по центру экрана */
         left: 50%;
         transform: translate(-50%, -50%); /* Центрируем элемент */
