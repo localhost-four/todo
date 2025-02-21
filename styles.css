@@ -755,12 +755,6 @@ input, textarea, select {
 /* Скрываем header и другие элементы при маленьких размерах окна или в iframe */
 @media (max-width: 460px), (max-height: 460px) {
 
-    header,
-    .app-header,
-    .modal,
-    .notification,
-    #cookie-banner,
-
     .tabs-container,
     .task-container {
         width: 100% !important;
