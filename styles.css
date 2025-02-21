@@ -760,9 +760,6 @@ input, textarea, select {
     .modal,
     .notification,
     #cookie-banner,
-    .app-container>*:not(.tabs-container):not(.task-container) {
-        display: none !important;
-    }
 
     .tabs-container,
     .task-container {
