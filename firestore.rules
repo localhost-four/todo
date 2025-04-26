@@ -8,8 +8,8 @@ service cloud.firestore {
 
     // Специфические правила для коллекции 'urls'
     match /urls/{urlId} {
-      allow read: if isAuthenticated() || isValidRequest() || isDefaultAllowed();
-      allow write: if isAuthenticated() || isValidRequest() || isValidUrlData() || isDefaultAllowed();
+      allow read: if isAuthenticated() || isValidRequest();
+      allow write: if isAuthenticated() || isValidRequest() || isValidUrlData();
     }
 
     // Проверка анонимной аутентификации
@@ -36,9 +36,23 @@ service cloud.firestore {
              || request.resource.data.title is string;
     }
 
-    // Доступ по умолчанию (для совместимости с открытыми правилами)
-    function isDefaultAllowed() {
-      return true;
+  }
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Разрешаем чтение и запись для всех пользователей (опасно для продакшн!)
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /urls/{urlId} {
+      // Разрешаем доступ только для аутентифицированных пользователей
+      allow read, write: if request.auth != null;
     }
   }
 }
