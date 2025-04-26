@@ -7,6 +7,7 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+
       {
         "source": "/todo/**",
         "destination": "/todo/index.html"
@@ -66,5 +67,16 @@
   },
   "database": {
     "rules": "database.rules.json"
-  }
+  },
+  "headers": [
+      {
+        "source": "/**",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "https://localhost-four.github.io"
+          }
+        ]
+      }
+    ]
 }
