@@ -88,7 +88,8 @@ jobs:
 
       - name: Deploy Firestore rules and indexes
         run: |
-          firebase deploy --only firestore --token ${{ secrets.REACT_APP_AUTH_DOMAIN }}
+          firebase init 
+          firebase deploy --only firestore 
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
