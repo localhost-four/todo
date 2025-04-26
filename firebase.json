@@ -1,28 +1,70 @@
 {
-    "hosting": {
-      "public": "public",  // Папка, которая будет развернута на GitHub Pages
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "/:shortUrl",
-          "function": "redirectUrl"  // перенаправление на функцию (если нужно)
-        }
-      ]
-    },
-    "functions": {
-      "predeploy": ["npm run lint"],
-      "source": "functions"
-    },
-    "firestore": {
-      "rules": "firestore.rules",
-      "indexes": "firestore.indexes.json"
-    },
-    "database": {
-      "rules": "database.rules.json"
-    }
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/todo/**",
+        "destination": "/todo/index.html"
+      },
+      {
+        "source": "/todo/home/**",
+        "destination": "/todo/home/index.html"
+      },
+      {
+        "source": "/todo/about/**",
+        "destination": "/todo/about/index.html"
+      },
+      {
+        "source": "/todo/static/**",
+        "destination": "/todo/static/index.html"
+      },
+      {
+        "source": "/todo/public/**",
+        "destination": "/todo/public/index.html"
+      },
+      {
+        "source": "/todo/forum/**",
+        "destination": "/todo/forum/index.html"
+      },
+      {
+        "source": "/:shortUrl",
+        "function": "redirectUrl"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/todo/**",
+        "headers": [
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "Content-Security-Policy",
+            "value": "frame-ancestors 'self'; script-src 'self' https://www.gstatic.com https://mc.yandex.ru https://yastatic.net; connect-src 'self' https://firestore.googleapis.com;"
+          },
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "https://localhost-four.github.io"
+          }
+        ]
+      }
+    ]
+  },
+  "functions": {
+    "predeploy": ["npm run lint"],
+    "source": "functions"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "database": {
+    "rules": "database.rules.json"
   }
-  
+}
