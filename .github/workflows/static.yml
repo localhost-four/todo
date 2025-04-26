@@ -35,7 +35,7 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Replace secrets in join.js
+      - name: Replace secrets in todo/join.js
         run: |
           sed -i 's|window.REACT_APP_API_KEY|${{ secrets.REACT_APP_API_KEY }}|g' todo/join.js
           sed -i 's|window.REACT_APP_AUTH_DOMAIN|${{ secrets.REACT_APP_AUTH_DOMAIN }}|g' todo/join.js
@@ -45,7 +45,7 @@ jobs:
           sed -i 's|window.REACT_APP_APP_ID|${{ secrets.REACT_APP_APP_ID }}|g' todo/join.js
           sed -i 's|window.REACT_APP_MEASUREMENT_ID|${{ secrets.REACT_APP_MEASUREMENT_ID }}|g' todo/join.js
 
-      - name: Replace secrets in home/script.js
+      - name: Replace secrets in todo/home/script.js
         run: |
           sed -i 's|window.REACT_APP_API_KEY|${{ secrets.REACT_APP_API_KEY }}|g' todo/home/script.js
           sed -i 's|window.REACT_APP_AUTH_DOMAIN|${{ secrets.REACT_APP_AUTH_DOMAIN }}|g' todo/home/script.js
@@ -55,7 +55,7 @@ jobs:
           sed -i 's|window.REACT_APP_APP_ID|${{ secrets.REACT_APP_APP_ID }}|g' todo/home/script.js
           sed -i 's|window.REACT_APP_MEASUREMENT_ID|${{ secrets.REACT_APP_MEASUREMENT_ID }}|g' todo/home/script.js
 
-      - name: Replace secrets in forum/script.js
+      - name: Replace secrets in todo/forum/script.js
         run: |
           sed -i 's|window.REACT_APP_API_KEY|${{ secrets.REACT_APP_API_KEY }}|g' todo/forum/script.js
           sed -i 's|window.REACT_APP_AUTH_DOMAIN|${{ secrets.REACT_APP_AUTH_DOMAIN }}|g' todo/forum/script.js
@@ -70,6 +70,14 @@ jobs:
           firebase deploy --only firestore --token ${{ secrets.FIREBASE_TOKEN }}
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Verify directory structure
+        run: |
+          ls -R todo/
+          if [ ! -f todo/join.js ] || [ ! -f todo/home/script.js ] || [ ! -f todo/forum/script.js ]; then
+            echo "Error: Required files missing in todo/ directory"
+            exit 1
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
