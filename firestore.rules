@@ -1,19 +1,34 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Разрешаем чтение и запись для всех пользователей (опасно для продакшн!)
-    match /{document=**} {
-      allow read, write: if true;
+    match /urls/{document=**} {
+      allow read: if isAuthenticated() || isValidRequest() || isDefaultAllowed();
+      allow write: if isAuthenticated() || isValidRequest() || isValidUrlData() || isDefaultAllowed();
     }
-  }
-}
 
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /urls/{urlId} {
-      // Разрешаем доступ только для аутентифицированных пользователей
-      allow read, write: if request.auth != null;
+    function isAuthenticated() {
+      return request.auth != null && request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+
+    function isValidRequest() {
+      let headers = request.resource.__metadata__.httpHeaders;
+      let referer = headers.get('referer', '');
+      return referer != '' && referer.startsWith('https://localhost-four.github.io/todo/');
+    }
+
+    function isValidUrlData() {
+      let url = request.resource.data.url;
+      return url is string
+             && url.startsWith('https://localhost-four.github.io/todo/')
+             && url.size() > 'https://localhost-four.github.io/todo/'.size()
+             && !url.contains('127.0.0.1')
+             && !url.contains(':3000')
+             && request.resource.data.timestamp is timestamp
+             && request.resource.data.title is string;
+    }
+
+    function isDefaultAllowed() {
+      return true;
     }
   }
 }
