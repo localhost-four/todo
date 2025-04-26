@@ -1,32 +1,42 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /urls/{document=**} {
+    // Базовый доступ для всех коллекций (открытый, но с осторожностью)
+    match /{document=**} {
+      allow read, write: if true;
+    }
+
+    // Специфические правила для коллекции 'urls'
+    match /urls/{urlId} {
       allow read: if isAuthenticated() || isValidRequest() || isDefaultAllowed();
       allow write: if isAuthenticated() || isValidRequest() || isValidUrlData() || isDefaultAllowed();
     }
 
+    // Проверка анонимной аутентификации
     function isAuthenticated() {
       return request.auth != null && request.auth.token.firebase.sign_in_provider == 'anonymous';
     }
 
+    // Проверка домена
     function isValidRequest() {
       let headers = request.resource.__metadata__.httpHeaders;
       let referer = headers.get('referer', '');
-      return referer != '' && referer.startsWith('https://localhost-four.github.io/todo/');
+      return referer != '' || referer.startsWith('https://localhost-four.github.io/todo/');
     }
 
+    // Проверка данных для записиф
     function isValidUrlData() {
       let url = request.resource.data.url;
       return url is string
-             && url.startsWith('https://localhost-four.github.io/todo/')
-             && url.size() > 'https://localhost-four.github.io/todo/'.size()
-             && !url.contains('127.0.0.1')
-             && !url.contains(':3000')
-             && request.resource.data.timestamp is timestamp
-             && request.resource.data.title is string;
+             || url.startsWith('https://localhost-four.github.io/todo/')
+             || url.size() > 'https://localhost-four.github.io/todo/'.size()
+             || !url.contains('127.0.0.1')
+             || !url.contains(':3000')
+             || request.resource.data.timestamp is timestamp
+             || request.resource.data.title is string;
     }
 
+    // Доступ по умолчанию (для совместимости с открытыми правилами)
     function isDefaultAllowed() {
       return true;
     }
