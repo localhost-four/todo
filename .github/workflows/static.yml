@@ -86,11 +86,17 @@ jobs:
           sed -i 's|window.REACT_APP_APP_ID|${{ secrets.REACT_APP_APP_ID }}|g' forum/script.js
           sed -i 's|window.REACT_APP_MEASUREMENT_ID|${{ secrets.REACT_APP_MEASUREMENT_ID }}|g' forum/script.js
 
+      - name: Authenticate with Firebase
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > $HOME/gcloud.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json
+          firebase use ${{ secrets.REACT_APP_PROJECT_ID }}
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
       - name: Deploy Firestore rules and indexes
         run: |
-          firebase login
-          firebase init 
-          firebase deploy --only firestore 
+          firebase deploy --only firestore:rules,firestore:indexes
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
