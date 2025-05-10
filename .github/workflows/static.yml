@@ -82,21 +82,9 @@ jobs:
           sed -i 's|window.REACT_APP_AUTH_DOMAIN|${{ secrets.REACT_APP_AUTH_DOMAIN }}|g' forum/script.js
           sed -i 's|window.REACT_APP_PROJECT_ID|${{ secrets.REACT_APP_PROJECT_ID }}|g' forum/script.js
           sed -i 's|window.REACT_APP_STORAGE_BUCKET|${{ secrets.REACT_APP_STORAGE_BUCKET }}|g' forum/script.js
-          sed -i 's|window.REACT_APP_MESSAGING_SENDER_ID|${{ secrets.REACT_APP WAPP_MESSAGING_SENDER_ID }}|g' forum/script.js
+          sed -i 's|window.REACT_APP_MESSAGING_SENDER_ID|${{ secrets.REACT_APP_MESSAGING_SENDER_ID }}|g' forum/script.js
           sed -i 's|window.REACT_APP_APP_ID|${{ secrets.REACT_APP_APP_ID }}|g' forum/script.js
           sed -i 's|window.REACT_APP_MEASUREMENT_ID|${{ secrets.REACT_APP_MEASUREMENT_ID }}|g' forum/script.js
-
-      #- name: Authenticate with Firebase and select project
-      #  run: |
-      #    firebase use ${{ secrets.REACT_APP_PROJECT_ID }} --token ${{ secrets.FIREBASE_TOKEN }}
-      #  env:
-      #    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-
-      #- name: Deploy Firestore rules and indexes
-      #  run: |
-      #    firebase deploy --only firestore:rules,firestore:indexes --token ${{ secrets.FIREBASE_TOKEN }}
-      #  env:
-      #    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
