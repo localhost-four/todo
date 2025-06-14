@@ -146,6 +146,8 @@ async function createEdit() {
     // Если title не найдено в базе данных, используем title страницы по умолчанию
     if (!title) {
         title = document.title;
+    } else {
+	 document.title = title;
     }
 
     const editableField = document.createElement('p');
