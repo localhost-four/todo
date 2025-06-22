@@ -4,11 +4,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'production',
-  entry: '/TODO/index.html',  // точка входа вашего приложения
+  entry: '/todo/index.html',  // точка входа вашего приложения
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '/TODO/bundle.js', // название основного бандла
-    publicPath: 'TODO', // путь на GitHub Pages
+    filename: '/todo/bundle.js', // название основного бандла
+    publicPath: 'todo', // путь на GitHub Pages
   },
   module: {
     rules: [
@@ -30,7 +30,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(), // Очистка старых файлов сборки
     new HtmlWebpackPlugin({
-      template: '/TODO/index.html', // файл-шаблон для генерации index.html
+      template: '/todo/index.html', // файл-шаблон для генерации index.html
     }),
   ],
   devServer: {
