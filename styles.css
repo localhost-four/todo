@@ -718,7 +718,6 @@ select {
     }
 
     body {
-        overflow: hidden !important;
         background-color: transparent !important;
         padding: 5px;
     }
